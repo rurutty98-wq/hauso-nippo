@@ -689,7 +689,7 @@ function renderCal() {
   var today = new Date();
   var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   // 空白セル
-  for (var i = 0; i {
+  for (var i = 0; i < firstDay; i++) {
     grid.appendChild(document.createElement('div'));
   }
   // 日付セル
@@ -1248,7 +1248,7 @@ function renderHist() {
     <div class="li" onclick="$('d${i}').classList.toggle('open')">
       <div class="li-hd">
         <div>
-          <div class="li-name">${esc(r.user)||'(名前なし)'}</div>
+          <div class="li-name">${esc(r.user)||')名前なし)'}</div>
           <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'→'}${esc(r.to)}</div>
         </div>
         <div style="text-align:right;">
@@ -1298,34 +1298,34 @@ function doCSV() {
     '出庫距離(km)','入庫距離(km)','出発時刻','到着時刻',
     '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額(円)','訪問目的','備考'];
   const rows = rs.map(r=>[
-    r.date,'車両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
+    r.date,'6⻊${r.vehicle},r.alcohol==='ok'?'ِ�格':'꣠j��意',r.alTime||'',
     r.user||'',r.from||'',r.to||'',
-    r.odoOut||0,r.odoIn||0,r.t3||'',r.t4||'',
-    r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・'),r.medical||'',
-    r.total||0,r.estimate||0,r.purpose||'',r.notes||''
+    r.odoOut||0,r.odoIn||0,z.t3||'',r.t4||'',
+    r.dist||0,z.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+)').join('�|��'),r.medical|'',
+    r.total||0,z.estimate||0,r.purpose||'',r.notes||''
   ]);
   const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`搬送日報_${eYM.y}年${pad(eYM.m)}月.csv`;
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;"}));
+  a.download=`搬送日報�${eYM.y}买${pad(eYM.m)}[nc�.csv`;
   a.click();
 }
 
 // ── Print ──
 function doPrint() {
-  const rs = getMRecs(eYM.y, eYM.m);
+  const rs = getMRecs(eYM.y,eYM.m);
   if(!rs.length){alert('この月の記録がありません');return;}
-  $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}　出力日：${fDateL(today())}`;
+  $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}完録日：t${fDateL(today())}`;
   const km=rs.reduce((s,r)=>s+(r.dist||0),0);
   const rev=rs.reduce((s,r)=>s+(r.total||0),0);
   $('pv-km').textContent=km.toFixed(1); $('pv-rev').textContent=fN(rev);
   $('pv-body').innerHTML=rs.map(r=>`<tr>
     <td>${r.date}</td><td style="text-align:center">車${r.vehicle}</td>
-    <td style="text-align:center">${r.alcohol==='ok'?'○':'×'} ${r.alTime||''}</td>
+    <td style="text-align:center">${r.alcohol==='ok'?'○':&�x'} ${r.alTime||''}</td>
     <td>${esc(r.user)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td>
     <td style="text-align:center">${r.odoOut||''}</td><td style="text-align:center">${r.odoIn||''}</td>
     <td style="text-align:center">${r.t3||''}</td><td style="text-align:center">${r.t4||''}</td>
-    <td style="text-align:center">${r.dist||0}</td>
+    <td style="text-align:center">er">${r.dist||0}</td>
     <td>${esc(r.comp)}</td><td>${normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・')}</td>
     <td>${esc(r.medical)}</td>
     <td style="text-align:right">${fN(r.total||0)}</td>
