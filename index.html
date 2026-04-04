@@ -108,7 +108,6 @@
     .btn-sm { padding: 6px 11px; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .btn-e { background: #e0f2fe; color: #0369a1; }
     .btn-d { background: #fee2e2; color: #dc2626; }
-    .btn-edit { background: #2563eb; color: white; }
 
     /* ── FAB ── */
     .fab {
@@ -396,8 +395,7 @@
         <input type="text" id="r-user" class="inp" placeholder="例：ヤマダ ルルン" style="font-size:16px; font-weight:600;">
       </div>
       <div class="g2" style="margin-top:10px;">
-        <div id="r-form-date" style="font-size:13px; font-weight:700; color:#1e293b; text-align:center; margin-bottom:6px; padding:4px; background:#f0f4f8; border-radius:6px;"></div>
-          <div>
+        <div>
           <div style="font-size:11px; font-weight:700; color:#dc2626; text-align:center; margin-bottom:4px;">🔴 出発時刻</div>
           <div class="time-sel-wrap" style="justify-content:center;">
             <select id="r-t3-h" class="time-sel" style="width:66px;border-color:#f59e0b;background:#fffbeb;font-weight:700;font-size:16px;"></select>
@@ -429,6 +427,14 @@
         <div class="row">
           <label class="lbl">🏁 到着地</label>
           <input type="text" id="r-to" class="inp" list="dl-to" placeholder="到着地を入力・選択" autocomplete="off">
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <label class="lbl">方向</label>
+        <div class="tog-g" id="dir-g">
+          <button class="tog s-bl" data-v="→" onclick="setTog('dir-g','s-bl',this)">→　片道</button>
+          <button class="tog" data-v="⇔" onclick="setTog('dir-g','s-bl',this)">⇔　往復</button>
+          <button class="tog" data-v="～" onclick="setTog('dir-g','s-bl',this)">～　その他</button>
         </div>
       </div>
       <div class="row">
@@ -626,7 +632,7 @@ const KT = 'kt_tpl_v3';
 let recs = [], tpls = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
-let curV = '1', curAL = 'ok';
+let curV = '1', curAL = 'ok', curDir = '→';
 
 const $ = id => document.getElementById(id);
 const load = k => { try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e) { return []; } };
@@ -683,7 +689,7 @@ function renderCal() {
   var today = new Date();
   var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   // 空白セル
-  for (var i = 0; i < firstDay; i++) {
+  for (var i = 0; i {
     grid.appendChild(document.createElement('div'));
   }
   // 日付セル
@@ -740,7 +746,7 @@ function showCalDetail(dateStr) {
     name.textContent = r.user || '（名前なし）';
     name.style.cssText = 'font-size:14px;font-weight:700;color:#1e293b;';
     var sub = document.createElement('div');
-    sub.textContent = (r.purpose||'') + (r.from ? ' 📍'+r.from : '') + (r.to ? ' → '+r.to : '');
+    sub.textContent = (r.purpose||'') + (r.from ? ' 📍'+r.from : '') + (r.to ? ' '+(r.direction||'→')+r.to : '');
     sub.style.cssText = 'font-size:11px;color:#64748b;margin-top:2px;';
     info.appendChild(name);
     info.appendChild(sub);
@@ -833,7 +839,7 @@ function renderDayUserCards() {
     var route = '';
     if (r.t3 || r.t4) route += (r.t3||'--') + '〜' + (r.t4||'--');
     if (r.from) route += (route ? ' ' : '') + esc(r.from);
-    if (r.to)   route += '→' + esc(r.to);
+    if (r.to)   route += (r.direction || '→') + esc(r.to);
     if (r.total) route += (route ? '  ' : '') + '¥' + fN(r.total);
     return '<div class="user-card">' +
       '<div class="uc-time">' + esc(r.t3 || '--:--') + '</div>' +
@@ -848,9 +854,7 @@ function renderDayUserCards() {
 
 // ── User form show/hide ──
 function showUserForm() {
-      $('user-form-section').style.display = 'block';
-      var dateVal = $('r-date').value;
-      if (dateVal) { $('r-form-date').textContent = '📅 ' + dateVal.replace(/-/g, '/'); }
+  $('user-form-section').style.display = 'block';
   $('btn-add-user').style.display = 'none';
   renderTplPicker();
   setTimeout(function(){
@@ -928,6 +932,7 @@ function setTog(gid, cls, btn) {
   document.querySelectorAll(`#${gid} .tog`).forEach(b => b.classList.remove('s-bl','s-gr','s-rd'));
   btn.classList.add(cls);
   if (gid==='al-g') curAL = btn.dataset.v;
+  if (gid==='dir-g') curDir = btn.dataset.v;
 }
 
 // ── Vehicle ──
@@ -949,40 +954,29 @@ function eqOwn(e) {
 
 // ── Chips (3-state: off → 所有 → 貸出 → off) ──
 function renderChips(cid, arr, otherId) {
-      const w = $(cid); w.innerHTML = '';
-      EQ.forEach(eq => {
-        const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
-        const isSimple = (eq === '歩行' || eq === 'その他');
-        let state;
-        if (isSimple) {
-          state = idx >= 0 ? 'sel' : null;
-        } else {
-          state = idx >= 0 ? eqOwn(arr[idx]) : null;
-        }
-        const b = document.createElement('button');
-        b.type = 'button';
-        if (isSimple) {
-          b.className = 'chip' + (state === 'sel' ? ' sel' : '');
-          b.innerHTML = esc(eq);
-        } else {
-          b.className = 'chip' + (state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
-          b.innerHTML = esc(eq) + (state ? '<span class="eq-bdg">' + state + '</span>' : '');
-        }
-        b.onclick = () => {
-          if (isSimple) {
-            if (idx < 0) { arr.push({name: eq, own: '所有'}); } else { arr.splice(idx, 1); }
-          } else {
-            if (idx < 0) { arr.push({name: eq, own: '所有'}); }
-            else if (arr[idx].own === '所有' || arr[idx] === '所有') { arr[idx] = {name: eq, own: '貸出'}; }
-            else { arr.splice(idx, 1); }
-          }
-          renderChips(cid, arr, otherId);
-        };
-        w.appendChild(b);
-      });
-      if (otherId) {
-        $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
+  const w = $(cid); w.innerHTML = '';
+  EQ.forEach(eq => {
+    const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
+    const state = idx >= 0 ? eqOwn(arr[idx]) : null; // null | '所有' | '貸出'
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
+    b.innerHTML = esc(eq) + (state ? `<span class="eq-bdg">${state}</span>` : '');
+    b.onclick = () => {
+      if (idx < 0) {
+        arr.push({name: eq, own: '所有'});           // off → 所有
+      } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
+        arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
+      } else {
+        arr.splice(idx, 1);                           // 貸出 → off
       }
+      renderChips(cid, arr, otherId);
+    };
+    w.appendChild(b);
+  });
+  if (otherId) {
+    $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
+  }
 }
 
 // ── Datalists（テンプレートから候補を生成） ──
@@ -1044,6 +1038,7 @@ function saveRec() {
     from:      $('r-from').value.trim(),
     to:        $('r-to').value.trim(),
     equipment: eqArr,
+    direction: curDir,
     purpose:   $('r-purpose').value.trim(),
     odoOut: parseFloat($('r-odo-out').value) || 0,
     odoIn:  parseFloat($('r-odo-in').value)  || 0,
@@ -1104,6 +1099,12 @@ function editRec(id) {
     b.classList.remove('s-gr','s-rd');
     if (b.dataset.v === curAL) b.classList.add(curAL === 'ok' ? 's-gr' : 's-rd');
   });
+  // 方向
+  curDir = r.direction || '→';
+  document.querySelectorAll('#dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === curDir) b.classList.add('s-bl');
+  });
   // 福祉用具
   rEq.length = 0;
   normEq(r.equipment||[]).forEach(e => rEq.push(e));
@@ -1126,11 +1127,6 @@ function cancelEdit() {
   toast('キャンセルしました');
 }
 
-    function editRecFromHist(id) {
-      editRec(id);
-      showPage('record');
-    }
-
 function clearF() {
   _editId = null;
   $('btn-save-main').textContent = '💾 保存する';
@@ -1142,6 +1138,12 @@ function clearF() {
   if ($('r-eq-other')) $('r-eq-other').value = '';
   rEq.length = 0;
   renderChips('r-eq-chips', rEq, 'r-eq-other');
+  // 方向リセット
+  curDir = '→';
+  document.querySelectorAll('#dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === '→') b.classList.add('s-bl');
+  });
   hideUserForm();
 }
 
@@ -1216,7 +1218,7 @@ function saveTpl() {
 }
 
 function delTpl(id) {
-  if (!confirm('削除しますか？')) return; 
+  if (!confirm('削除しますか？')) return;
   tpls = tpls.filter(t=>t.id!==id); sv(KT, tpls); renderTpls(); refreshDrop();
 }
 
@@ -1247,7 +1249,7 @@ function renderHist() {
       <div class="li-hd">
         <div>
           <div class="li-name">${esc(r.user)||'(名前なし)'}</div>
-          <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}→${esc(r.to)}</div>
+          <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'→'}${esc(r.to)}</div>
         </div>
         <div style="text-align:right;">
           <div style="font-weight:800;color:#059669;font-size:15px;">¥${fN(r.total)}</div>
@@ -1270,8 +1272,7 @@ function renderHist() {
         ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
         ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;">
-          <button class="btn-sm btn-edit" onclick="event.stopPropagation();editRecFromHist('${r.id}')">編集</button>
-              <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
+          <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
     </div>`).join('');
