@@ -950,7 +950,7 @@ function eqOwn(e) {
 // ── Chips (3-state: off → 所有 → 貸出 → off) ──
 function renderChips(cid, arr, otherId) {
       const w = $(cid); w.innerHTML = '';
-      Eq.forEach(eq => {
+      EQ.forEach(eq => {
         const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
         const isSimple = (eq === '歩行' || eq === 'その他');
         let state;
