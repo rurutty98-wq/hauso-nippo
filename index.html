@@ -108,6 +108,7 @@
     .btn-sm { padding: 6px 11px; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .btn-e { background: #e0f2fe; color: #0369a1; }
     .btn-d { background: #fee2e2; color: #dc2626; }
+    .btn-edit { background: #2563eb; color: white; }
 
     /* ── FAB ── */
     .fab {
@@ -395,7 +396,8 @@
         <input type="text" id="r-user" class="inp" placeholder="例：ヤマダ ルルン" style="font-size:16px; font-weight:600;">
       </div>
       <div class="g2" style="margin-top:10px;">
-        <div>
+        <div id="r-form-date" style="font-size:13px; font-weight:700; color:#1e293b; text-align:center; margin-bottom:6px; padding:4px; background:#f0f4f8; border-radius:6px;"></div>
+          <div>
           <div style="font-size:11px; font-weight:700; color:#dc2626; text-align:center; margin-bottom:4px;">🔴 出発時刻</div>
           <div class="time-sel-wrap" style="justify-content:center;">
             <select id="r-t3-h" class="time-sel" style="width:66px;border-color:#f59e0b;background:#fffbeb;font-weight:700;font-size:16px;"></select>
@@ -846,7 +848,9 @@ function renderDayUserCards() {
 
 // ── User form show/hide ──
 function showUserForm() {
-  $('user-form-section').style.display = 'block';
+      $('user-form-section').style.display = 'block';
+      var dateVal = $('r-date').value;
+      if (dateVal) { $('r-form-date').textContent = '📅 ' + dateVal.replace(/-/g, '/'); }
   $('btn-add-user').style.display = 'none';
   renderTplPicker();
   setTimeout(function(){
@@ -945,23 +949,40 @@ function eqOwn(e) {
 
 // ── Chips (3-state: off → 所有 → 貸出 → off) ──
 function renderChips(cid, arr, otherId) {
-  const w = $(cid); w.innerHTML = '';
-  EQ.forEach(eq => {
-    const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
-    const state = idx >= 0 ? eqOwn(arr[idx]) : null; // null | '所有' | '貸出'
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'chip' + (state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
-    b.innerHTML = esc(eq) + (state ? `<span class="eq-bdg">${state}</span>` : '');
-    b.onclick = () => {
-      if (idx < 0) {
-        arr.push({name: eq, own: '所有'});           // off → 所有
-      } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
-        arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
-      } else {
-        arr.splice(idx, 1);                           // 貸出 → off
+      const w = $(cid); w.innerHTML = '';
+      Eq.forEach(eq => {
+        const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
+        const isSimple = (eq === '歩行' || eq === 'その他');
+        let state;
+        if (isSimple) {
+          state = idx >= 0 ? 'sel' : null;
+        } else {
+          state = idx >= 0 ? eqOwn(arr[idx]) : null;
+        }
+        const b = document.createElement('button');
+        b.type = 'button';
+        if (isSimple) {
+          b.className = 'chip' + (state === 'sel' ? ' sel' : '');
+          b.innerHTML = esc(eq);
+        } else {
+          b.className = 'chip' + (state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
+          b.innerHTML = esc(eq) + (state ? '<span class="eq-bdg">' + state + '</span>' : '');
+        }
+        b.onclick = () => {
+          if (isSimple) {
+            if (idx < 0) { arr.push({name: eq, own: '所有'}); } else { arr.splice(idx, 1); }
+          } else {
+            if (idx < 0) { arr.push({name: eq, own: '所有'}); }
+            else if (arr[idx].own === '所有' || arr[idx] === '所有') { arr[idx] = {name: eq, own: '貸出'}; }
+            else { arr.splice(idx, 1); }
+          }
+          renderChips(cid, arr, otherId);
+        };
+        w.appendChild(b);
+      });
+      if (otherId) {
+        $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
       }
-      renderChips(cid, arr, otherId);
     };
     w.appendChild(b);
   });
@@ -1111,6 +1132,11 @@ function cancelEdit() {
   toast('キャンセルしました');
 }
 
+    function editRecFromHist(id) {
+      editRec(id);
+      showPage('record');
+    }
+
 function clearF() {
   _editId = null;
   $('btn-save-main').textContent = '💾 保存する';
@@ -1250,7 +1276,8 @@ function renderHist() {
         ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
         ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;">
-          <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
+          <button class="btn-sm btn-edit" onclick="event.stopPropagation();editRecFromHist('${r.id}')">編集</button>
+              <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
     </div>`).join('');
