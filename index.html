@@ -983,12 +983,6 @@ function renderChips(cid, arr, otherId) {
       if (otherId) {
         $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
       }
-    };
-    w.appendChild(b);
-  });
-  if (otherId) {
-    $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
-  }
 }
 
 // ── Datalists（テンプレートから候補を生成） ──
