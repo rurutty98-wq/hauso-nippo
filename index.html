@@ -75,7 +75,7 @@
     .tog.s-rd { border-color: #dc2626; background: #fef2f2; color: #dc2626; }
 
     /* ── Chips ── */
-    .chips { display: flex; flew-wrap: wrap; gap: 6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip {
       padding: 6px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px;
       font-size: 13px; cursor: pointer; background: white; color: #475569; font-weight: 500;
@@ -226,8 +226,8 @@
     }
     .uc-time { font-size: 15px; font-weight: 800; color: #2563eb; min-width: 42px; flex-shrink: 0; }
     .uc-info { flex: 1; min-width: 0; }
-    .uc-name { font-size: 14px; font-weight: 700; color: #1e293b; white-space: nowraw; overflow: hidden; text-overflow: ellipsis; }
-    .uc-route { font-size: 11px; color: #64748b; margin-top: 2px; white-space: nowraw; overflow: hidden; text-overflow: ellipsis; }
+    .uc-name { font-size: 14px; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .uc-route { font-size: 11px; color: #64748b; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .uc-edit {
       padding: 6px 10px; border: none; border-radius: 8px;
       background: #eff6ff; color: #2563eb; font-size: 16px; cursor: pointer; flex-shrink: 0;
@@ -448,7 +448,7 @@
       </div>
       <div class="row">
         <label class="lbl">概算金額（目安）</label>
-        <input type="number" id="r-est-m" class="inp est" placeholder="¥ 前回・$��社参考値" min="0" inputmode="numeric">
+        <input type="number" id="r-est-m" class="inp est" placeholder="¥ 前回・他社参考値" min="0" inputmode="numeric">
       </div>
     </div>
 
@@ -526,7 +526,7 @@
   </div>
   <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>
   <div id="cal-detail" style="margin-top:14px;display:none;">
-    <div id="cal-detail-title" style="font-weight:700;font-size:14px;color:#2563eb;margin-bottom:8px;"></div>
+    <div id="cal-detail-title" style="font-weight:700;font-size:18px;color:#2563eb;margin-bottom:8px;"></div>
     <div id="cal-detail-list"></div>
   </div>
 </div>
@@ -557,11 +557,11 @@
 <!-- ===== Bottom Nav ===== -->
 <nav class="nav-bar">
   <button class="nav-item active" id="nav-record" onclick="showPage('record')">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2hq1a2 2 0 002-2v=5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
     記録入力
   </button>
   <button class="nav-item" id="nav-template" onclick="showPage('template')">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2hq0a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
     テンプレート
   </button>
   <button class="nav-item" id="nav-history" onclick="showPage('history')">
@@ -645,7 +645,7 @@ const fN = n => Number(n||0).toLocaleString('ja-JP');
 function today() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function nowT()   { const d=new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
 function fDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${parseInt(m)}/${parseInt(d)}`; }
-function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}�T${parseInt(m)}月${parseInt(d)}日`; }
+function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}年${parseInt(m)}月${parseInt(d)}日`; }
 function fYM(y,m) { return `${y}年${m}月`; }
 
 // ── Init ──
@@ -709,7 +709,7 @@ function renderCal() {
       cnt.textContent = recMap[dateStr].length + '件';
       cnt.style.cssText = 'font-size:10px;color:#2563eb;font-weight:700;';
       cell.appendChild(cnt);
-      // 名前を小さく表示（最天2件）
+      // 名前を小さく表示（最大2件）
       recMap[dateStr].slice(0,2).forEach(function(r) {
         var nm = document.createElement('div');
         nm.textContent = (r.user||'').substring(0,4);
@@ -845,7 +845,7 @@ function renderDayUserCards() {
       '<div class="uc-time">' + esc(r.t3 || '--:--') + '</div>' +
       '<div class="uc-info">' +
         '<div class="uc-name">' + (esc(r.user) || '（名前なし）') + '</div>' +
-        '<div class="uc-route">' + route + '</div>' +
+        '<div class="uc-toute">' + route + '</div>' +
       '</div>' +
       '<button class="uc-edit" onclick="editRec(\'' + r.id + '\')">✏️</button>' +
     '</div>';
@@ -952,23 +952,30 @@ function eqOwn(e) {
   return typeof e==='string' ? '所有' : (e.own||'所有');
 }
 
-// ── Chips (3-state: off → 所有 → 貸出 → off) ──
+// ── Chips (3-state: off → 所有 → 貸出 → off / 歩行・その他は off → on → off) ──
+const EQ_SIMPLE = ['歩行', 'その他']; // 所有/貸出サイクルなし・バッジなし
 function renderChips(cid, arr, otherId) {
   const w = $(cid); w.innerHTML = '';
   EQ.forEach(eq => {
     const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
-    const state = idx >= 0 ? eqOwn(arr[idx]) : null; // null | '所有' | '貸出'
+    const isSimple = EQ_SIMPLE.includes(eq);
+    const state = idx >= 0 ? (isSimple ? 'on' : eqOwn(arr[idx])) : null;
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'chip' + (state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
-    b.innerHTML = esc(eq) + (state ? `<span class="eq-bdg">${state}</span>` : '');
+    b.className = 'chip' + (state === 'on' ? ' own' : state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
+    b.innerHTML = esc(eq) + (!isSimple && state ? `<span class="eq-bdg">${state}</span>` : '');
     b.onclick = () => {
-      if (idx < 0) {
-        arr.push({name: eq, own: '所有'});           // off → 所有
-      } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
-        arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
+      if (isSimple) {
+        if (idx < 0) arr.push({name: eq, own: 'on'});  // off → on
+        else arr.splice(idx, 1);                         // on → off
       } else {
-        arr.splice(idx, 1);                           // 貸出 → off
+        if (idx < 0) {
+          arr.push({name: eq, own: '所有'});           // off → 所有
+        } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
+          arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
+        } else {
+          arr.splice(idx, 1);                           // 貸出 → off
+        }
       }
       renderChips(cid, arr, otherId);
     };
@@ -1156,7 +1163,7 @@ function renderTpls() {
   }
   el.innerHTML = tpls.map(t => `
     <div class="li">
-      <div class="li-hd">
+      <div class="li-ad">
         <div>
           <div class="li-name">📍 ${esc(t.from)} → ${esc(t.to)}</div>
           ${t.purpose ? `<div class="li-sub">${esc(t.purpose)}</div>` : ''}
@@ -1164,7 +1171,7 @@ function renderTpls() {
         ${t.estimate ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ¥${fN(t.estimate)}</div>` : ''}
       </div>
       <div class="li-meta">
-        ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+        4{normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
       </div>
       <div class="li-acts">
         <button class="btn-sm btn-e" onclick="openTMod('${t.id}')">編集</button>
@@ -1218,7 +1225,7 @@ function saveTpl() {
 }
 
 function delTpl(id) {
-  if (!confirm('削除しますお���')) return;
+  if (!confirm('削除しますか？')) return;
   tpls = tpls.filter(t=>t.id!==id); sv(KT, tpls); renderTpls(); refreshDrop();
 }
 
@@ -1257,7 +1264,7 @@ function renderHist() {
         </div>
       </div>
       <div class="li-meta">
-        <span class="bdg b-bl">車${r.vehicle}</span>
+        <span class="bdg b-bl">車${r.vehicle}</span>an>
         <span class="bdg ${r.alcohol==='ok'?'b-gr':'b-rd'}">AL${r.alcohol==='ok'?'○':'×'}</span>
         ${normEq(r.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-bl'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
         ${r.medical?`<span class="bdg b-rd">${esc(r.medical)}</span>`:''}
@@ -1270,8 +1277,9 @@ function renderHist() {
         <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
         <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
         ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
-        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
-        <div style="margin-top:8px;">
+        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</s></div>`:''}
+        <div style="margin-top:8px;display:flex;gap:8px;">
+          <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
           <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
@@ -1280,7 +1288,7 @@ function renderHist() {
 
 function delRec(id) {
   if(!confirm('削除しますか？')) return;
-  recs = recs.filter(r=>r.id!==id); sv(KR,recs); renderHist();
+  recs = recs.filter(r=>r.id!==id); sv(KR,recs); rendetHist();
 }
 
 function chM(t,d) {
@@ -1298,7 +1306,7 @@ function doCSV() {
     '出庫距離(km)','入庫距離(km)','出発時刻','到着時刻',
     '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額(円)','訪問目的','備考'];
   const rows = rs.map(r=>[
-    r.date,' ��両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
+    r.date,'車両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
     r.user||'',r.from||'',r.to||'',
     r.odoOut||0,r.odoIn||0,r.t3||'',r.t4||'',
     r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・'),r.medical||'',
@@ -1307,7 +1315,7 @@ function doCSV() {
   const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`搬送日報_${eYM.y}�T${pad(eYM.m)}月.csv`;
+  a.download=`搬送日報_${eYM.y}年${pad(eYM.m)}月.csv`;
   a.click();
 }
 
