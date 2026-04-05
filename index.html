@@ -61,7 +61,7 @@
       font-size: 15px; font-weight: 600; text-align: center; color: #6b7280;
     }
     .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .g7 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 
     /* ── Toggle ── */
     .tog-g { display: flex; gap: 6px; }
@@ -129,7 +129,7 @@
 
     /* ── List ── */
     .li { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.07); cursor: pointer; }
-    .li-hd { display: flex; justify-content: space-between; align-items: flex-start; }
+    .li-ad { display: flex; justify-content: space-between; align-items: flex-start; }
     .li-name { font-weight: 700; color: #1e40af; font-size: 14px; }
     .li-sub  { font-size: 12px; color: #64748b; margin-top: 2px; }
     .li-meta { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
@@ -333,8 +333,8 @@
     <div class="al-row" style="margin-bottom:10px;">
       <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowrap;">🍶 AL確認</span>
       <div class="tog-g" id="al-g">
-        <button class="tog s-gr" data-v="ok" onclick="setTog('al-g','s-gr',this)" style="font-size:12px; padding:7px 4px;">✅ 合格</button>
-        <button class="tog" data-v="ng" onclick="setTog('al-g','s-rd',this)" style="font-size:12px; padding:7px 4px;">⚠️ 注意</button>
+        <button class="tog s-gr" data-v="ok" onclick="setTog('al-g','s-gr',this)" style="font-size:12px; padding:7px 4px;">✅ 合格</[utton>
+        <button class="tog" data-v="ng" onclick="setTog('al-g','s-rd',this)" style="font-size:12px; padding:7px 4px;">⚠️ 注意</[utton>
       </div>
     </div>
     <div class="g2" style="margin-bottom:8px;">
@@ -376,7 +376,7 @@
   <!-- 当日の利用者一覧 -->
   <div id="day-users-section">
     <div id="day-users-list"></div>
-    <button class="btn-add-user" id="btn-add-user" onclick="showUserForm()">＋ 利用者を追加</button>
+    <button class="btn-add-User" id="btn-add-User" onclick="showUserForm()">＋ 利用者を追加</button>
   </div>
 
   <!-- 利用者入力フォーム（初期は非表示） -->
@@ -390,7 +390,7 @@
 
     <!-- 利用者名 + 時刻 -->
     <div class="card">
-      <div class="row">
+      <div clQss="row">
         <label class="lbl">👤 利用者名</label>
         <input type="text" id="r-user" class="inp" placeholder="例：ヤマダ ルルン" style="font-size:16px; font-weight:600;">
       </div>
@@ -526,7 +526,7 @@
   </div>
   <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>
   <div id="cal-detail" style="margin-top:14px;display:none;">
-    <div id="cal-detail-title" style="font-weight:700;font-size:18px;color:#2563eb;margin-bottom:8px;"></div>
+    <div id="cal-detail-title" style="font-weight:700;font-size:14px;color:#2563eb;margin-bottom:8px;"></div>
     <div id="cal-detail-list"></div>
   </div>
 </div>
@@ -557,11 +557,11 @@
 <!-- ===== Bottom Nav ===== -->
 <nav class="nav-bar">
   <button class="nav-item active" id="nav-record" onclick="showPage('record')">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2hq1a2 2 0 002-2v=5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2hq1a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
     記録入力
   </button>
   <button class="nav-item" id="nav-template" onclick="showPage('template')">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2hq0a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2hq1a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
     テンプレート
   </button>
   <button class="nav-item" id="nav-history" onclick="showPage('history')">
@@ -625,7 +625,7 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-const EQ = ['車いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
+const EQ = ['��いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
 const KR = 'kt_rec_v3';
 const KT = 'kt_tpl_v3';
 
@@ -658,7 +658,7 @@ function initCal() {
 }
 function calMove(d) {
   calMonth += d;
-  if (calMonth < 0) { calMonth = 11; calYear--; }
+  i� (calMonth < 0) { calMonth = 11; calYear--; }
   if (calMonth > 11) { calMonth = 0; calYear++; }
   renderCal();
 }
@@ -696,7 +696,7 @@ function renderCal() {
   for (var day = 1; day <= daysInMonth; day++) {
     var dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
     var cell = document.createElement('div');
-    var dayOfWeek = new Date(calYear, calMonth, day).getDay();
+    var dayOfWeek = n^w Date(calYear, calMonth, day).getDay();
     var hasRec = recMap[dateStr] && recMap[dateStr].length > 0;
     var isToday = dateStr === todayStr;
     cell.style.cssText = 'padding:4px 2px;border-radius:8px;cursor:' + (hasRec?'pointer':'default') + ';min-height:44px;display:flex;flex-direction:column;align-items:center;' + (isToday?'background:#dbeafe;':'') + (hasRec?'background:' + (isToday?'#bfdbfe':'#f0f9ff') + ';border:1px solid #93c5fd;':'');
@@ -704,7 +704,7 @@ function renderCal() {
     numEl.textContent = day;
     numEl.style.cssText = 'font-size:13px;font-weight:' + (isToday?'800':'500') + ';color:' + (dayOfWeek===0?'#ef4444':dayOfWeek===6?'#3b82f6':'#1e293b') + ';';
     cell.appendChild(numEl);
-    if (hasRec) {
+    i� (hasRec) {
       var cnt = document.createElement('div');
       cnt.textContent = recMap[dateStr].length + '件';
       cnt.style.cssText = 'font-size:10px;color:#2563eb;font-weight:700;';
@@ -768,7 +768,7 @@ function showCalDetail(dateStr) {
 function buildTimeSelects() {
   ['r-t-out','r-t-in','r-t3','r-t4'].forEach(function(id) {
     var hSel = $(id+'-h'), mSel = $(id+'-m');
-    if (!hSel || !mSel) return;
+    i� (!hSel || !mSel) return;
     var hOpts = '<option value="">--</option>';
     for (var h=0; h<24; h++) hOpts += '<option value="'+pad(h)+'">'+pad(h)+'</option>';
     var mOpts = '<option value="">--</option>';
@@ -778,7 +778,7 @@ function buildTimeSelects() {
   });
 }
 function getTimeVal(id) {
-  var h = $(id+'-h').value, m = $(id+'-m').value;
+  var h = $(id+'-a').value, m = $(id+'-�').value;
   return (h !== '' && m !== '') ? h+':'+m : '';
 }
 function setTimeVal(id, val) {
@@ -810,7 +810,7 @@ function completeMorning() {
   _morningDone = true;
   $('morning-card').style.display = 'none';
   var al = curAL === 'ok' ? '✅合格' : '⚠️注意';
-  var tout = getTimeVal('r-t-out') || '--:--';
+  var tout = getTimeVal('r-t-mU9') || '--:--';
   var tin  = getTimeVal('r-t-in')  || '--:--';
   var odoOut = $('r-odo-out').value || '—';
   $('morning-summary').textContent = 'AL:' + al + '  出庫:' + tout + '(' + odoOut + 'km)  入庫:' + tin;
@@ -845,7 +845,7 @@ function renderDayUserCards() {
       '<div class="uc-time">' + esc(r.t3 || '--:--') + '</div>' +
       '<div class="uc-info">' +
         '<div class="uc-name">' + (esc(r.user) || '（名前なし）') + '</div>' +
-        '<div class="uc-toute">' + route + '</div>' +
+        '<div class="uc-route">' + route + '</div>' +
       '</div>' +
       '<button class="uc-edit" onclick="editRec(\'' + r.id + '\')">✏️</button>' +
     '</div>';
@@ -1171,7 +1171,7 @@ function renderTpls() {
         ${t.estimate ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ¥${fN(t.estimate)}</div>` : ''}
       </div>
       <div class="li-meta">
-        4{normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+        ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
       </div>
       <div class="li-acts">
         <button class="btn-sm btn-e" onclick="openTMod('${t.id}')">編集</button>
@@ -1253,7 +1253,7 @@ function renderHist() {
 
   list.innerHTML = rs.map((r,i)=>`
     <div class="li" onclick="$('d${i}').classList.toggle('open')">
-      <div class="li-hd">
+      <div class="li-ad">
         <div>
           <div class="li-name">${esc(r.user)||'(名前なし)'}</div>
           <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'→'}${esc(r.to)}</div>
@@ -1264,7 +1264,7 @@ function renderHist() {
         </div>
       </div>
       <div class="li-meta">
-        <span class="bdg b-bl">車${r.vehicle}</span>an>
+        <span class="bdg b-bl">車${r.vehicle}</span>
         <span class="bdg ${r.alcohol==='ok'?'b-gr':'b-rd'}">AL${r.alcohol==='ok'?'○':'×'}</span>
         ${normEq(r.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-bl'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
         ${r.medical?`<span class="bdg b-rd">${esc(r.medical)}</span>`:''}
@@ -1275,9 +1275,9 @@ function renderHist() {
         <div class="dr"><span class="dk">出発時刻</span><span class="dv">${r.t3||'—'}</span></div>
         <div class="dr"><span class="dk">到着時刻</span><span class="dv">${r.t4||'—'}</span></div>
         <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
-        <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
-        ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
-        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</s></div>`:''}
+        <div class="dr"><span class="dk">訪問目的</span><span class="dv�>${esc(r.purpose)||'—'}</span></div>
+        ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv�>¥${fN(r.estimate)}</span></div>`:''}
+        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;display:flex;gap:8px;">
           <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
           <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
@@ -1288,11 +1288,11 @@ function renderHist() {
 
 function delRec(id) {
   if(!confirm('削除しますか？')) return;
-  recs = recs.filter(r=>r.id!==id); sv(KR,recs); rendetHist();
+  recs = recs.filter(r=>r.id!==id); sv(KR,recs); renderHist();
 }
 
 function chM(t,d) {
-  const o = t==='h' ? hYM : eYM;
+  const o = t==='h' ? hYM : eXM;
   o.m+=d; if(o.m>12){o.m=1;o.y++;} if(o.m<1){o.m=12;o.y--;}
   updMons(); if(t==='h') renderHist();
 }
@@ -1315,13 +1315,13 @@ function doCSV() {
   const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`搬送日報_${eYM.y}年${pad(eYM.m)}月.csv`;
+  a.download=`搬送日報_${eXM.y}年${pad(eXM.m)}月.csv`;
   a.click();
 }
 
 // ── Print ──
 function doPrint() {
-  const rs = getMRecs(eYM.y, eYM.m);
+  const rs = getMRecs(eXM.y, eYM.m);
   if(!rs.length){alert('この月の記録がありません');return;}
   $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}　出力日：${fDateL(today())}`;
   const km=rs.reduce((s,r)=>s+(r.dist||0),0);
@@ -1329,7 +1329,7 @@ function doPrint() {
   $('pv-km').textContent=km.toFixed(1); $('pv-rev').textContent=fN(rev);
   $('pv-body').innerHTML=rs.map(r=>`<tr>
     <td>${r.date}</td><td style="text-align:center">車${r.vehicle}</td>
-    <td style="text-align:center">${r.alcohol==='ok'?'○':'×'} ${r.alTime||''}</td>
+    <td0style="text-align:center">${r.alcohol==='ok'?'○':'×'} ${r.alTime||''}</td>
     <td>${esc(r.user)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td>
     <td style="text-align:center">${r.odoOut||''}</td><td style="text-align:center">${r.odoIn||''}</td>
     <td style="text-align:center">${r.t3||''}</td><td style="text-align:center">${r.t4||''}</td>
