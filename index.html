@@ -1030,7 +1030,6 @@ function saveRec() {
 
   const estEl = $('r-est-m');
   const otherText = $('r-eq-other').value.trim();
-  const eqArrm();
   const eqArr = normEq(rEq).map(e =>
     e.name === 'その他' && otherText ? {name: 'その他('+otherText+')', own: e.own} : e
   );
@@ -1277,14 +1276,14 @@ function renderHist() {
         <div class="dr"><span class="dk">到着時刻</span><span class="dv">${r.t4||'—'}</span></div>
         <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
         <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
-        ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>g:''}
-        ${r.notes?g<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
+        ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
+        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;display:flex;gap:8px;">
           <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
           <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
-    </div>g).join('');
+    </div>`).join('');
 }
 
 function delRec(id) {
