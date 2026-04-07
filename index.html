@@ -905,7 +905,8 @@ function applyTemplate(id) {
   $('r-from').value    = t.from    || '';
   $('r-to').value      = t.to      || '';
   $('r-purpose').value = t.purpose || '';
-  $('r-est-m').value   = t.estimate ? String(t.estimate) : '';
+  $('r-est-lo').value  = t.estimateLo ? String(t.estimateLo) : (t.estimate ? String(t.estimate) : '');
+  $('r-est-hi').value  = t.estimateHi ? String(t.estimateHi) : '';
   $('r-comp').value    = t.comp    || '';
   if (t.notes) $('r-notes').value = t.notes;
   rEq.length = 0;
@@ -1025,7 +1026,8 @@ function autoFill() {
   if (!t) return;
   if (!$('r-to').value)      $('r-to').value      = t.to      || '';
   if (!$('r-purpose').value) $('r-purpose').value = t.purpose || '';
-  if (!$('r-est-m').value)   $('r-est-m').value   = t.estimate ? String(t.estimate) : '';
+  if (!$('r-est-lo').value)  $('r-est-lo').value  = t.estimateLo ? String(t.estimateLo) : (t.estimate ? String(t.estimate) : '');
+  if (!$('r-est-hi').value)  $('r-est-hi').value  = t.estimateHi ? String(t.estimateHi) : '';
   if (!$('r-comp').value)    $('r-comp').value     = t.comp    || '';
   if (!$('r-notes').value && t.notes) $('r-notes').value = t.notes;
   if (rEq.length === 0 && (t.equipment||[]).length) {
@@ -1066,7 +1068,8 @@ function saveRec() {
     t4: getTimeVal('r-t4'),
     dist:    parseFloat($('r-dist').value)  || 0,
     total:   parseInt($('r-total').value, 10) || 0,
-    estimate:parseInt(estEl.value, 10)        || 0,
+    estimateLo: parseInt($('r-est-lo').value, 10) || 0,
+    estimateHi: parseInt($('r-est-hi').value, 10) || 0,
     comp:    $('r-comp').value.trim(),
     medical: $('r-med').value.trim(),
     notes:   $('r-notes').value.trim(),
@@ -1097,7 +1100,8 @@ function editRec(id) {
   $('r-from').value    = r.from    || '';
   $('r-to').value      = r.to      || '';
   $('r-purpose').value = r.purpose || '';
-  $('r-est-m').value   = r.estimate ? String(r.estimate) : '';
+  $('r-est-lo').value  = r.estimateLo ? String(r.estimateLo) : (r.estimate ? String(r.estimate) : '');
+  $('r-est-hi').value  = r.estimateHi ? String(r.estimateHi) : '';
   setTimeVal('r-t3', r.t3 || '');
   setTimeVal('r-t4', r.t4 || '');
   $('r-dist').value    = r.dist    ? String(r.dist)  : '';
