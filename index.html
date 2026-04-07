@@ -854,9 +854,20 @@ function lockMorning(flag) {
 }
 function restoreMorning() {
   var raw = localStorage.getItem('kt_morning_v1');
-  if (!raw) return;
+  if (!raw) {
+    var selV = curV || '1';
+    var lastOdo = localStorage.getItem('kt_odo_' + selV);
+    if (lastOdo) $('r-odo-out').value = lastOdo;
+    return;
+  }
   var m = JSON.parse(raw);
-  if (m.date !== today()) { localStorage.removeItem('kt_morning_v1'); return; }
+  if (m.date !== today()) {
+    localStorage.removeItem('kt_morning_v1');
+    var selV = curV || '1';
+    var lastOdo = localStorage.getItem('kt_odo_' + selV);
+    if (lastOdo) $('r-odo-out').value = lastOdo;
+    return;
+  }
   if (m.al) {
     curAL = m.al;
     var cls = m.al === 'ok' ? 's-gr' : 's-rd';
