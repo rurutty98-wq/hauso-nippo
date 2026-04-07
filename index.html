@@ -448,7 +448,10 @@
       </div>
       <div class="row">
         <label class="lbl">概算金額（目安）</label>
-        <input type="number" id="r-est-m" class="inp est" placeholder="¥ 前回・他社参考値" min="0" inputmode="numeric">
+        <div class="g2">
+          <input type="number" id="r-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="r-est-hi" class="inp est" placeholder="上限 ¥">
+        </div>
       </div>
     </div>
 
@@ -605,7 +608,10 @@
     </div>
     <div class="row">
       <label class="lbl">概算金額（目安・参考値）</label>
-      <input type="number" id="t-est" class="inp est" placeholder="¥ 前回・他社参考値" min="0" inputmode="numeric">
+        <div class="g2">
+          <input type="number" id="t-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="t-est-hi" class="inp est" placeholder="上限 ¥">
+        </div>
       <div style="font-size:10px; color:#94a3b8; margin-top:3px;">記録入力時に自動入力されます</div>
     </div>
     <div class="row">
@@ -647,6 +653,13 @@ function nowT()   { const d=new Date(); return `${pad(d.getHours())}:${pad(d.get
 function fDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${parseInt(m)}/${parseInt(d)}`; }
 function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}年${parseInt(m)}月${parseInt(d)}日`; }
 function fYM(y,m) { return `${y}年${m}月`; }
+function fEst(r) {
+  var lo = r.estimateLo || r.estimate || 0, hi = r.estimateHi || 0;
+  if (!lo && !hi) return '';
+  if (lo && hi) return '¥' + fN(lo) + '〜¥' + fN(hi);
+  if (lo) return '¥' + fN(lo) + '〜';
+  return '〜¥' + fN(hi);
+}
 
 // ── Init ──
 // ── カレンダー ──
@@ -1028,7 +1041,7 @@ function saveRec() {
   if (!$('r-date').value)         { alert('日付を入力してください'); return; }
   if (!$('r-user').value.trim())  { alert('利用者名を入力してください'); return; }
 
-  const estEl = $('r-est-m');
+  // estimate range
   const otherText = $('r-eq-other').value.trim();
   const eqArr = normEq(rEq).map(e =>
     e.name === 'その他' && otherText ? {name: 'その他('+otherText+')', own: e.own} : e
@@ -1139,7 +1152,7 @@ function clearF() {
   $('btn-save-main').textContent = '💾 保存する';
   $('btn-save-main').style.background = '';
   // 日付・AL・車両・odo・tOut/tIn は保持（朝の記録は1日1回なので保持）
-  ['r-user','r-from','r-to','r-purpose','r-est-m',
+  ['r-user','r-from','r-to','r-purpose','r-est-lo','r-est-hi',
    'r-dist','r-total','r-comp','r-med','r-notes'].forEach(function(id){ if($(id)) $(id).value=''; });
   setTimeVal('r-t3', ''); setTimeVal('r-t4', '');
   if ($('r-eq-other')) $('r-eq-other').value = '';
@@ -1168,7 +1181,7 @@ function renderTpls() {
           <div class="li-name">📍 ${esc(t.from)} → ${esc(t.to)}</div>
           ${t.purpose ? `<div class="li-sub">${esc(t.purpose)}</div>` : ''}
         </div>
-        ${t.estimate ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ¥${fN(t.estimate)}</div>` : ''}
+        ${(t.estimateLo||t.estimateHi) ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ${fEst(t)}</div>` : ''}
       </div>
       <div class="li-meta">
         ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
@@ -1195,7 +1208,7 @@ function openTMod(id) {
     $('t-notes').value   = t.notes   || '';
     normEq(t.equipment||[]).forEach(e => tEq.push(e));
   } else {
-    ['t-id','t-from','t-to','t-purpose','t-est','t-comp','t-notes'].forEach(id => $(id).value = '');
+    ['t-id','t-from','t-to','t-purpose','t-est-lo','t-est-hi','t-comp','t-notes'].forEach(id => $(id).value = '');
   }
   renderChips('t-eq-chips', tEq, 't-eq-other');
   $('tmod').classList.add('open');
@@ -1214,7 +1227,8 @@ function saveTpl() {
     to:        $('t-to').value.trim(),
     equipment: eqArr,
     purpose:   $('t-purpose').value.trim(),
-    estimate:  parseInt($('t-est').value, 10) || 0,
+    estimateLo: parseInt($('t-est-lo').value, 10) || 0,
+    estimateHi: parseInt($('t-est-hi').value, 10) || 0,
     comp:      $('t-comp').value.trim(),
     notes:     $('t-notes').value.trim()
   };
@@ -1276,7 +1290,7 @@ function renderHist() {
         <div class="dr"><span class="dk">到着時刻</span><span class="dv">${r.t4||'—'}</span></div>
         <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
         <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
-        ${r.estimate?`<div class="dr"><span class="dk">概算</span><span class="dv">¥${fN(r.estimate)}</span></div>`:''}
+        ${(r.estimateLo||r.estimateHi||r.estimate)?`<div class="dr"><span class="dk">概算</span><span class="dv">${fEst(r)}</span></div>`:''}
         ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;display:flex;gap:8px;">
           <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
@@ -1304,13 +1318,13 @@ function doCSV() {
   if(!rs.length){alert('この月の記録がありません');return;}
   const h = ['日付','車両','AL確認','AL時刻','利用者名','出発地','到着地',
     '出庫距離(km)','入庫距離(km)','出発時刻','到着時刻',
-    '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額(円)','訪問目的','備考'];
+    '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額_下限(円)','概算金額_上限(円)','訪問目的','備考'];
   const rows = rs.map(r=>[
     r.date,'車両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
     r.user||'',r.from||'',r.to||'',
     r.odoOut||0,r.odoIn||0,r.t3||'',r.t4||'',
     r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・'),r.medical||'',
-    r.total||0,r.estimate||0,r.purpose||'',r.notes||''
+    r.total||0,r.estimateLo||r.estimate||0,r.estimateHi||0,r.purpose||'',r.notes||''
   ]);
   const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a=document.createElement('a');
@@ -1337,7 +1351,7 @@ function doPrint() {
     <td>${esc(r.comp)}</td><td>${normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・')}</td>
     <td>${esc(r.medical)}</td>
     <td style="text-align:right">${fN(r.total||0)}</td>
-    <td style="text-align:right">${r.estimate?fN(r.estimate):''}</td>
+    <td style="text-align:right">${fEst(r)}</td>
     <td>${esc(r.notes)}</td>
   </tr>`).join('');
   window.print();
