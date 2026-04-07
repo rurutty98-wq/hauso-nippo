@@ -858,6 +858,7 @@ function restoreMorning() {
     var selV = curV || '1';
     var lastOdo = localStorage.getItem('kt_odo_' + selV);
     if (lastOdo) $('r-odo-out').value = lastOdo;
+        $('r-odo-in').value = '';
     return;
   }
   var m = JSON.parse(raw);
@@ -866,6 +867,7 @@ function restoreMorning() {
     var selV = curV || '1';
     var lastOdo = localStorage.getItem('kt_odo_' + selV);
     if (lastOdo) $('r-odo-out').value = lastOdo;
+        $('r-odo-in').value = '';
     return;
   }
   if (m.al) {
