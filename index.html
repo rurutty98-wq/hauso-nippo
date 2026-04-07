@@ -830,6 +830,8 @@ function completeMorning() {
   };
   localStorage.setItem('kt_morning_v1', JSON.stringify(mData));
   lockMorning(true);
+  // 車両ごとの入庫距離を保存（翌日の出庫距離用）
+  if ($('r-odo-in').value) localStorage.setItem('kt_odo_' + curV, $('r-odo-in').value);
   $('morning-card').style.display = 'none';
   var al = curAL === 'ok' ? '✅合格' : '⚠️注意';
   var tout = getTimeVal('r-t-out') || '--:--';
@@ -990,9 +992,10 @@ function setTog(gid, cls, btn) {
 function pickV(btn) {
   document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel'); curV = btn.dataset.v;
-  var lastOdo = getLastOdoIn(curV);
-  if (lastOdo > 0 && !$('r-odo-out').value) {
-    $('r-odo-out').value = lastOdo;
+  // 前日の入庫距離を出庫距離にセット
+  if (!$('r-odo-out').value) {
+    var savedOdo = localStorage.getItem('kt_odo_' + curV);
+    if (savedOdo) $('r-odo-out').value = savedOdo;
   }
 }
 function getLastOdoIn(vehicle) {
