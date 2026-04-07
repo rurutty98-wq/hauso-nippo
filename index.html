@@ -813,46 +813,30 @@ function updateDateCount() {
 var _morningDone = false;
 
 function onDateChange() {
-  _morningDone = false;
-  $('morning-card').style.display = 'block';
-  $('morning-banner').style.display = 'none';
-  renderDayUserCards();
-}
+      _morningDone = false;
+      lockMorning(false);
+      $('morning-card').style.display = 'block';
+      $('morning-banner').style.display = 'none';
+      var selDate = $('r-date').value;
+      var raw = localStorage.getItem('kt_morning_v1');
+      if (raw) {
+        var m = JSON.parse(raw);
+        if (m.date === selDate) {
+          $('r-odo-out').value = m.odoOut || '';
+          $('r-odo-in').value = m.odoIn || '';
+        } else {
+          var lOdo = localStorage.getItem('kt_odo_' + (curV||'1'));
+          $('r-odo-out').value = lOdo || '';
+          $('r-odo-in').value = '';
+        }
+      } else {
+        var lOdo = localStorage.getItem('kt_odo_' + (curV||'1'));
+        $('r-odo-out').value = lOdo || '';
+        $('r-odo-in').value = '';
+      }
+      renderDayUserCards();
+    }
 
-function completeMorning() {
-  _morningDone = true;
-  var mData = {
-    date: today(),
-    al: curAL,
-    tOutH: $('r-t-out-h').value, tOutM: $('r-t-out-m').value,
-    tInH: $('r-t-in-h').value, tInM: $('r-t-in-m').value,
-    odoOut: $('r-odo-out').value, odoIn: $('r-odo-in').value
-  };
-  localStorage.setItem('kt_morning_v1', JSON.stringify(mData));
-  lockMorning(true);
-  // 車両ごとの入庫距離を保存（翌日の出庫距離用）
-  if ($('r-odo-in').value) localStorage.setItem('kt_odo_' + curV, $('r-odo-in').value);
-  $('morning-card').style.display = 'none';
-  var al = curAL === 'ok' ? '✅合格' : '⚠️注意';
-  var tout = getTimeVal('r-t-out') || '--:--';
-  var tin  = getTimeVal('r-t-in')  || '--:--';
-  var odoOut = $('r-odo-out').value || '—';
-  $('morning-summary').textContent = 'AL:' + al + '  出庫:' + tout + '(' + odoOut + 'km)  入庫:' + tin;
-  $('morning-banner').style.display = 'flex';
-  toast('☀️ 朝の記録を保存しました');
-}
-
-function openMorning() {
-  _morningDone = false;
-  lockMorning(false);
-  $('morning-card').style.display = 'block';
-  $('morning-banner').style.display = 'none';
-}
-function lockMorning(flag) {
-  ['r-odo-out','r-odo-in','r-t-out-h','r-t-out-m','r-t-in-h','r-t-in-m'].forEach(function(id) { $(id).disabled = flag; });
-  document.querySelectorAll('#al-g .tog').forEach(function(b) { b.disabled = flag; });
-}
-var _sameDayRestore = false;
     function restoreMorning() {
       $('r-odo-out').value = ''; $('r-odo-in').value = '';
   var raw = localStorage.getItem('kt_morning_v1');
