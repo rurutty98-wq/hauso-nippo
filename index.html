@@ -837,6 +837,37 @@ function onDateChange() {
       renderDayUserCards();
     }
 
+    function completeMorning() {
+      _morningDone = true;
+      var mData = {
+        date: today(),
+        al: curAL,
+        tOutH: $('r-t-out-h').value, tOutM: $('r-t-out-m').value,
+        tInH: $('r-t-in-h').value, tInM: $('r-t-in-m').value,
+        odoOut: $('r-odo-out').value, odoIn: $('r-odo-in').value
+      };
+      localStorage.setItem('kt_morning_v1', JSON.stringify(mData));
+      lockMorning(true);
+      if ($('r-odo-in').value) localStorage.setItem('kt_odo_' + curV, $('r-odo-in').value);
+      $('morning-card').style.display = 'none';
+      var al = curAL === 'ok' ? '\u2705\u5408\u683c' : '\u26a0\ufe0f\u6ce8\u610f';
+      var tout = getTimeVal('r-t-out') || '--:--';
+      var tin  = getTimeVal('r-t-in')  || '--:--';
+      var odoOut = $('r-odo-out').value || '\u2014';
+      $('morning-summary').textContent = 'AL:' + al + '  \u51fa\u5eab:' + tout + '(' + odoOut + 'km)  \u5165\u5eab:' + tin;
+      $('morning-banner').style.display = 'flex';
+      toast('\u2600\ufe0f \u671d\u306e\u8a18\u9332\u3092\u4fdd\u5b58\u3057\u307e\u3057\u305f');
+    }
+    function openMorning() {
+      _morningDone = false;
+      lockMorning(false);
+      $('morning-card').style.display = 'block';
+      $('morning-banner').style.display = 'none';
+    }
+    function lockMorning(flag) {
+      ['r-odo-out','r-odo-in','r-t-out-h','r-t-out-m','r-t-in-h','r-t-in-m'].forEach(function(id) { $(id).disabled = flag; });
+      document.querySelectorAll('#al-g .tog').forEach(function(b) { b.disabled = flag; });
+    }
     function restoreMorning() {
       $('r-odo-out').value = ''; $('r-odo-in').value = '';
   var raw = localStorage.getItem('kt_morning_v1');
