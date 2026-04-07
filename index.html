@@ -990,6 +990,16 @@ function setTog(gid, cls, btn) {
 function pickV(btn) {
   document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel'); curV = btn.dataset.v;
+  var lastOdo = getLastOdoIn(curV);
+  if (lastOdo > 0 && !$('r-odo-out').value) {
+    $('r-odo-out').value = lastOdo;
+  }
+}
+function getLastOdoIn(vehicle) {
+  var matched = recs.filter(function(r) { return r.vehicle === vehicle && r.odoIn > 0; });
+  if (matched.length === 0) return 0;
+  matched.sort(function(a, b) { return new Date(b.created) - new Date(a.created); });
+  return matched[0].odoIn;
 }
 
 // ── Eq helpers ──
