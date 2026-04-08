@@ -841,6 +841,7 @@ function onDateChange() {
       _morningDone = true;
       var mData = {
         date: today(),
+        vehicle: curV,
         al: curAL,
         tOutH: $('r-t-out-h').value, tOutM: $('r-t-out-m').value,
         tInH: $('r-t-in-h').value, tInM: $('r-t-in-m').value,
@@ -887,7 +888,15 @@ function onDateChange() {
         $('r-odo-in').value = '';
     return;
   }
-  if (m.al) {
+  // 車両を復元
+      if (m.vehicle) {
+        curV = m.vehicle;
+        document.querySelectorAll('.vm button').forEach(function(b) {
+          b.classList.remove('sel');
+          if (b.dataset.v === curV) b.classList.add('sel');
+        });
+      }
+      if (m.al) {
     curAL = m.al;
     var cls = m.al === 'ok' ? 's-gr' : 's-rd';
     document.querySelectorAll('#al-g .tog').forEach(function(b) {
@@ -1027,14 +1036,14 @@ function setTog(gid, cls, btn) {
 
 // ── Vehicle ──
 function pickV(btn) {
-  document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel'); curV = btn.dataset.v;
-  // 前日の入庫距離を出庫距離にセット
-  if (!$('r-odo-out').value) {
-    var savedOdo = localStorage.getItem('kt_odo_' + curV);
-    if (savedOdo) $('r-odo-out').value = savedOdo;
-  }
-}
+      document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel'); curV = btn.dataset.v;
+      // 車両ごとの前日入庫距離を出庫距離にセット
+      var savedOdo = localStorage.getItem('kt_odo_' + curV);
+      $('r-odo-out').value = savedOdo || '';
+      $('r-odo-in').value = '';
+    }
+
 function getLastOdoIn(vehicle) {
   var matched = recs.filter(function(r) { return r.vehicle === vehicle && r.odoIn > 0; });
   if (matched.length === 0) return 0;
