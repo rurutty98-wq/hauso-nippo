@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ä»è­·ã¿ã¯ã·ã¼ æ¬éæ¥å ±</title>
+  <title>介護タクシー 搬送日報</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="æ¬éæ¥å ±">
+  <meta name="apple-mobile-web-app-title" content="搬送日報">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -14,7 +14,7 @@
       background: #f0f4f8; color: #1a202c; -webkit-text-size-adjust: 100%;
     }
 
-    /* ââ Nav ââ */
+    /* ── Nav ── */
     .nav-bar {
       position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
       background: white; border-top: 1px solid #e2e8f0; display: flex; z-index: 100;
@@ -27,16 +27,16 @@
     .nav-item.active { color: #2563eb; }
     .nav-item svg { width: 21px; height: 21px; }
 
-    /* ââ Pages ââ */
+    /* ── Pages ── */
     .page { display: none; padding: 12px; padding-bottom: 76px; max-width: 520px; margin: 0 auto; }
     .page.active { display: block; }
     .page-title { font-size: 19px; font-weight: 800; color: #1e3a5f; margin-bottom: 12px; padding-top: 8px; }
 
-    /* ââ Card ââ */
+    /* ── Card ── */
     .card { background: white; border-radius: 14px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
     .card-title { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
 
-    /* ââ Form ââ */
+    /* ── Form ── */
     .row { margin-bottom: 11px; }
     .row:last-child { margin-bottom: 0; }
     .lbl { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 4px; }
@@ -63,7 +63,7 @@
     .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 
-    /* ââ Toggle ââ */
+    /* ── Toggle ── */
     .tog-g { display: flex; gap: 6px; }
     .tog {
       flex: 1; padding: 8px 4px; border: 1.5px solid #e2e8f0; border-radius: 9px;
@@ -74,7 +74,7 @@
     .tog.s-gr { border-color: #059669; background: #ecfdf5; color: #059669; }
     .tog.s-rd { border-color: #dc2626; background: #fef2f2; color: #dc2626; }
 
-    /* ââ Chips ââ */
+    /* ── Chips ── */
     .chips { display: flex; flew-wrap: wrap; gap: 6px; }
     .chip {
       padding: 6px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px;
@@ -87,7 +87,7 @@
     .eq-bdg { display: inline-block; font-size: 9px; padding: 1px 4px; border-radius: 3px;
               margin-left: 3px; background: rgba(255,255,255,0.65); font-weight: 700; vertical-align: middle; }
 
-    /* ââ Route preview ââ */
+    /* ── Route preview ── */
     .route-card {
       background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 12px;
       padding: 11px 13px; margin-top: 8px;
@@ -95,7 +95,7 @@
     .route-card .rc-route { font-size: 14px; font-weight: 700; color: #1e40af; }
     .route-card .rc-tags  { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
 
-    /* ââ Buttons ââ */
+    /* ── Buttons ── */
     .btn-save {
       width: 100%; padding: 16px; background: #2563eb; color: white; border: none;
       border-radius: 14px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 6px;
@@ -109,7 +109,7 @@
     .btn-e { background: #e0f2fe; color: #0369a1; }
     .btn-d { background: #fee2e2; color: #dc2626; }
 
-    /* ââ FAB ââ */
+    /* ── FAB ── */
     .fab {
       position: fixed; right: 16px; bottom: 72px; width: 52px; height: 52px;
       border-radius: 50%; background: #2563eb; color: white; border: none;
@@ -118,7 +118,7 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* ââ Badges ââ */
+    /* ── Badges ── */
     .bdg { display: inline-flex; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .b-bl { background: #dbeafe; color: #1d4ed8; }
     .b-gr { background: #d1fae5; color: #065f46; }
@@ -127,7 +127,7 @@
     .b-ye { background: #fef9c3; color: #713f12; }
     .b-or { background: #ffedd5; color: #9a3412; }
 
-    /* ââ List ââ */
+    /* ── List ── */
     .li { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.07); cursor: pointer; }
     .li-hd { display: flex; justify-content: space-between; align-items: flex-start; }
     .li-name { font-weight: 700; color: #1e40af; font-size: 14px; }
@@ -142,18 +142,18 @@
     .dk { color: #94a3b8; }
     .dv { color: #1a202c; font-weight: 500; text-align: right; max-width: 60%; }
 
-    /* ââ Summary ââ */
+    /* ── Summary ── */
     .sg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .si { text-align: center; padding: 9px 4px; background: #f8fafc; border-radius: 10px; }
     .sv { font-size: 17px; font-weight: 800; color: #1e3a5f; }
     .sl { font-size: 10px; color: #94a3b8; margin-top: 1px; }
 
-    /* ââ Month nav ââ */
+    /* ── Month nav ── */
     .mn-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .mn-disp { font-size: 17px; font-weight: 800; color: #1e3a5f; }
     .mn-btn { padding: 7px 14px; border: none; background: white; border-radius: 8px; font-size: 15px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
-    /* ââ Modal ââ */
+    /* ── Modal ── */
     .modal-bg {
       display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
       z-index: 200; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
@@ -167,7 +167,7 @@
     .mh { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 14px; }
     .mt { font-size: 17px; font-weight: 800; color: #1e3a5f; margin-bottom: 14px; }
 
-    /* ââ Toast ââ */
+    /* ── Toast ── */
     .toast {
       position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-80px);
       background: #1e3a5f; color: white; padding: 10px 20px; border-radius: 10px;
@@ -176,15 +176,15 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ââ Empty ââ */
+    /* ── Empty ── */
     .empty { text-align: center; padding: 44px 16px; color: #94a3b8; }
     .empty-i { font-size: 46px; margin-bottom: 10px; }
     .empty-t { font-size: 13px; }
 
-    /* ââ Section label ââ */
+    /* ── Section label ── */
     .sec-lbl { font-size: 11px; font-weight: 700; color: #2563eb; text-align: center; margin-bottom: 8px; letter-spacing: .06em; }
 
-    /* ââ Vehicle mini ââ */
+    /* ── Vehicle mini ── */
     .vm { display: flex; gap: 4px; }
     .vm button {
       padding: 5px 11px; border: 1.5px solid #e2e8f0; border-radius: 8px;
@@ -192,21 +192,21 @@
     }
     .vm button.sel { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
 
-    /* ââ AL row ââ */
+    /* ── AL row ── */
     .al-row { display: flex; align-items: center; gap: 8px; }
     .al-row .tog-g { flex: 1; }
     .time-sel-wrap { display:flex; align-items:center; gap:4px; }
     .time-sel-wrap .tsep { font-weight:700; font-size:18px; color:#475569; }
     .time-sel { border:1.5px solid #e2e8f0; border-radius:9px; font-size:15px; padding:8px 4px; background:#f8fafc; color:#1e293b; text-align:center; -webkit-appearance:none; appearance:none; }
 
-    /* ââ Divider ââ */
+    /* ── Divider ── */
     .divider { border: none; border-top: 1.5px dashed #bfdbfe; margin: 10px 0; }
 
-    /* ââ Amount row ââ */
+    /* ── Amount row ── */
     .amt-label { font-size: 11px; font-weight: 700; color: #64748b; text-align: center; margin-bottom: 4px; }
     .amt-note { font-size: 10px; color: #94a3b8; text-align: center; margin-top: 3px; }
 
-    /* ââ Morning banner ââ */
+    /* ── Morning banner ── */
     .morning-banner {
       display: flex; align-items: center; justify-content: space-between;
       background: #ecfdf5; border: 1.5px solid #6ee7b7; border-radius: 12px;
@@ -218,7 +218,7 @@
       background: #d1fae5; color: #065f46; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0;
     }
 
-    /* ââ User card ââ */
+    /* ── User card ── */
     .user-card {
       display: flex; align-items: center; gap: 10px;
       background: white; border: 1px solid #e2e8f0; border-radius: 12px;
@@ -233,7 +233,7 @@
       background: #eff6ff; color: #2563eb; font-size: 16px; cursor: pointer; flex-shrink: 0;
     }
 
-    /* ââ Add user button ââ */
+    /* ── Add user button ── */
     .btn-add-user {
       width: 100%; padding: 14px; border: 2px dashed #93c5fd;
       border-radius: 12px; background: #f0f9ff; color: #2563eb;
@@ -242,7 +242,7 @@
     }
     .btn-add-user:active { background: #dbeafe; }
 
-    /* ââ Template chips ââ */
+    /* ── Template chips ── */
     .tpl-chip {
       padding: 7px 14px; border: 1.5px solid #bfdbfe; border-radius: 20px;
       background: #eff6ff; color: #1d4ed8; font-size: 13px; font-weight: 600;
@@ -250,7 +250,7 @@
     }
     .tpl-chip.sel { border-color: #2563eb; background: #2563eb; color: white; }
 
-    /* ââ Print ââ */
+    /* ── Print ── */
     #pv { display: none; }
     @media print {
       body { background: white !important; font-size: 10px; }
@@ -281,23 +281,23 @@
 <!-- ===== PRINT VIEW ===== -->
 <div id="pv">
   <div class="ph">
-    <div class="pt">æ¬éæ¥å ±ï¼ä»è­·ã¿ã¯ã·ã¼ï¼</div>
+    <div class="pt">搬送日報（介護タクシー）</div>
     <div id="pv-sub" class="ps"></div>
   </div>
   <table>
     <thead>
       <tr>
-        <th>æ¥ä»</th><th>è»ä¸¡</th><th>AL</th>
-        <th>å©ç¨è</th><th>åºçºå°</th><th>å°çå°</th>
-        <th>åºåº«km</th><th>å¥åº«km</th><th>åºçº</th><th>å°ç</th>
-        <th>km</th><th>åä¹è</th><th>ç¦ç¥ç¨å·</th>
-        <th>å»çã±ã¢</th><th>åè¨(å)</th><th>æ¦ç®(å)</th><th>åè</th>
+        <th>日付</th><th>車両</th><th>AL</th>
+        <th>利用者</th><th>出発地</th><th>到着地</th>
+        <th>出庫km</th><th>入庫km</th><th>出発</th><th>到着</th>
+        <th>km</th><th>同乗者</th><th>福祉用具</th>
+        <th>医療ケア</th><th>合計(円)</th><th>概算(円)</th><th>備考</th>
       </tr>
     </thead>
     <tbody id="pv-body"></tbody>
     <tfoot>
       <tr>
-        <td colspan="9" style="text-align:right;">åè¨</td>
+        <td colspan="9" style="text-align:right;">合計</td>
         <td id="pv-km" style="text-align:center;"></td>
         <td colspan="3"></td>
         <td id="pv-rev" style="text-align:center;"></td>
@@ -308,48 +308,48 @@
 </div>
 
 <!-- ============================================================
-     PAGE: è¨é²å¥å
+     PAGE: 記録入力
      ============================================================ -->
 <div id="page-record" class="page active">
-  <div class="page-title">ð æ¬éæ¥å ±</div>
+  <div class="page-title">🚗 搬送日報</div>
 
-  <!-- æ¥ä» + è»ä¸¡ -->
+  <!-- 日付 + 車両 -->
   <div class="card">
     <div style="display:flex; align-items:center; gap:8px;">
       <input type="date" id="r-date" class="inp" style="flex:1; font-size:15px; padding:9px 10px;" onchange="onDateChange()">
       <div class="vm">
-        <button class="sel" data-v="1" onclick="pickV(this)">â </button>
-        <button data-v="2" onclick="pickV(this)">â¡</button>
+        <button class="sel" data-v="1" onclick="pickV(this)">①</button>
+        <button data-v="2" onclick="pickV(this)">②</button>
       </div>
     </div>
   </div>
 
-  <!-- âï¸ æã®è¨é²ï¼1æ¥1åï¼ -->
+  <!-- ☀️ 朝の記録（1日1回） -->
   <div id="morning-card" class="card" style="border:1.5px solid #93c5fd;">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-      <span style="font-size:13px; font-weight:700; color:#1e40af;">âï¸ æã®è¨é²ï¼1æ¥1åï¼</span>
-      <button class="mb-open" onclick="completeMorning()">â å®äºã«ãã</button>
+      <span style="font-size:13px; font-weight:700; color:#1e40af;">☀️ 朝の記録（1日1回）</span>
+      <button class="mb-open" onclick="completeMorning()">✅ 完了にする</button>
     </div>
     <div class="al-row" style="margin-bottom:10px;">
-      <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowraw;">ð¶ ALç¢ºèª</span>
+      <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowraw;">🍶 AL確認</span>
       <div class="tog-g" id="al-g">
-        <button class="tog s-gr" data-v="ok" onclick="setTog('al-g','s-gr',this)" style="font-size:12px; padding:7px 4px;">â åæ ¼</button>
-        <button class="tog" data-v="ng" onclick="setTog('al-g','s-rd',this)" style="font-size:12px; padding:7px 4px;">â ï¸ æ³¨æ</button>
+        <button class="tog s-gr" data-v="ok" onclick="setTog('al-g','s-gr',this)" style="font-size:12px; padding:7px 4px;">✅ 合格</button>
+        <button class="tog" data-v="ng" onclick="setTog('al-g','s-rd',this)" style="font-size:12px; padding:7px 4px;">⚠️ 注意</button>
       </div>
     </div>
     <div class="g2" style="margin-bottom:8px;">
       <div>
-        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">åºåº«è·é¢ (km)</div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">出庫距離 (km)</div>
         <input type="number" id="r-odo-out" autocomplete="off" class="inp" placeholder="0.0" step="0.1" min="0" inputmode="decimal" style="text-align:center;">
       </div>
       <div>
-        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">å¥åº«è·é¢ (km)</div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">入庫距離 (km)</div>
         <input type="number" id="r-odo-in" autocomplete="off" name="odo_arrival_nocache" class="inp" placeholder="0.0" step="0.1" min="0" inputmode="decimal" style="text-align:center;">
       </div>
     </div>
     <div class="g2">
       <div>
-        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">ð åºåº«æå»</div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">🚗 出庫時刻</div>
         <div class="time-sel-wrap" style="justify-content:center;">
           <select id="r-t-out-h" class="time-sel" style="width:62px;"></select>
           <span class="tsep">:</span>
@@ -357,7 +357,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">ð  å¥åº«æå»</div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">🏠 入庫時刻</div>
         <div class="time-sel-wrap" style="justify-content:center;">
           <select id="r-t-in-h" class="time-sel" style="width:62px;"></select>
           <span class="tsep">:</span>
@@ -367,36 +367,36 @@
     </div>
   </div>
 
-  <!-- æã®è¨é²ããã¼ï¼å®äºå¾ã«è¡¨ç¤ºï¼ -->
+  <!-- 朝の記録バナー（完了後に表示） -->
   <div id="morning-banner" class="morning-banner" style="display:none;">
     <div id="morning-summary" class="mb-summary"></div>
-    <button class="mb-open" onclick="openMorning()">ä¿®æ­£ãã</button>
+    <button class="mb-open" onclick="openMorning()">修正する</button>
   </div>
 
-  <!-- å½æ¥ã®å©ç¨èä¸è¦§ -->
+  <!-- 当日の利用者一覧 -->
   <div id="day-users-section">
     <div id="day-users-list"></div>
-    <button class="btn-add-user" id="btn-add-user" onclick="showUserForm()">ï¼ å©ç¨èãè¿½å </button>
+    <button class="btn-add-user" id="btn-add-user" onclick="showUserForm()">＋ 利用者を追加</button>
   </div>
 
-  <!-- å©ç¨èå¥åãã©ã¼ã ï¼åæã¯éè¡¨ç¤ºï¼ -->
+  <!-- 利用者入力フォーム（初期は非表示） -->
   <div id="user-form-section" style="display:none;">
 
-    <!-- ãã³ãã¬ã¼ãé¸æ -->
+    <!-- テンプレート選択 -->
     <div class="card" id="tpl-picker-card" style="display:none;">
-      <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:8px;">ð ãã³ãã¬ã¼ãããé¸æ</div>
+      <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:8px;">📋 テンプレートから選択</div>
       <div id="tpl-picker-list" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
     </div>
 
-    <!-- å©ç¨èå + æå» -->
+    <!-- 利用者名 + 時刻 -->
     <div class="card">
       <div class="row">
-        <label class="lbl">ð¤ å©ç¨èå</label>
-        <input type="text" id="r-user" class="inp" placeholder="ä¾ï¼ã¤ãã ã«ã«ã³" style="font-size:16px; font-weight:600;">
+        <label class="lbl">👤 利用者名</label>
+        <input type="text" id="r-user" class="inp" placeholder="例：ヤマダ ルルン" style="font-size:16px; font-weight:600;">
       </div>
       <div class="g2" style="margin-top:10px;">
         <div>
-          <div style="font-size:11px; font-weight:700; color:#dc2626; text-align:center; margin-bottom:4px;">ð´ åºçºæå»</div>
+          <div style="font-size:11px; font-weight:700; color:#dc2626; text-align:center; margin-bottom:4px;">🔴 出発時刻</div>
           <div class="time-sel-wrap" style="justify-content:center;">
             <select id="r-t3-h" class="time-sel" style="width:66px;border-color:#f59e0b;background:#fffbeb;font-weight:700;font-size:16px;"></select>
             <span class="tsep">:</span>
@@ -404,7 +404,7 @@
           </div>
         </div>
         <div>
-          <div style="font-size:11px; font-weight:700; color:#2563eb; text-align:center; margin-bottom:4px;">â­ å°çæå»</div>
+          <div style="font-size:11px; font-weight:700; color:#2563eb; text-align:center; margin-bottom:4px;">⭐ 到着時刻</div>
           <div class="time-sel-wrap" style="justify-content:center;">
             <select id="r-t4-h" class="time-sel" style="width:66px;font-size:16px;"></select>
             <span class="tsep">:</span>
@@ -414,118 +414,118 @@
       </div>
     </div>
 
-    <!-- ã«ã¼ãã»ç¦ç¥ç¨å· -->
+    <!-- ルート・福祉用具 -->
     <div class="card">
       <datalist id="dl-from"></datalist>
       <datalist id="dl-to"></datalist>
       <datalist id="dl-purpose"></datalist>
       <div class="g2">
         <div class="row">
-          <label class="lbl">ð åºçºå°</label>
-          <input type="text" id="r-from" class="inp" list="dl-from" placeholder="åºçºå°ãå¥åã»é¸æ" autocomplete="off" oninput="autoFill()">
+          <label class="lbl">📍 出発地</label>
+          <input type="text" id="r-from" class="inp" list="dl-from" placeholder="出発地を入力・選択" autocomplete="off" oninput="autoFill()">
         </div>
         <div class="row">
-          <label class="lbl">ð å°çå°</label>
-          <input type="text" id="r-to" class="inp" list="dl-to" placeholder="å°çå°ãå¥åã»é¸æ" autocomplete="off">
+          <label class="lbl">🏁 到着地</label>
+          <input type="text" id="r-to" class="inp" list="dl-to" placeholder="到着地を入力・選択" autocomplete="off">
         </div>
       </div>
       <div class="row" style="margin-top:8px;">
-        <label class="lbl">æ¹å</label>
+        <label class="lbl">方向</label>
         <div class="tog-g" id="dir-g">
-          <button class="tog s-bl" data-v="â" onclick="setTog('dir-g','s-bl',this)">âãçé</button>
-          <button class="tog" data-v="â" onclick="setTog('dir-g','s-bl',this)">âãå¾å¾©</button>
-          <button class="tog" data-v="ï½" onclick="setTog('dir-g','s-bl',this)">ï½ããã®ä»</button>
+          <button class="tog s-bl" data-v="→" onclick="setTog('dir-g','s-bl',this)">→　片道</button>
+          <button class="tog" data-v="⇔" onclick="setTog('dir-g','s-bl',this)">⇔　往復</button>
+          <button class="tog" data-v="～" onclick="setTog('dir-g','s-bl',this)">～　その他</button>
         </div>
       </div>
       <div class="row">
-        <label class="lbl">ç¦ç¥ç¨å·</label>
+        <label class="lbl">福祉用具</label>
         <div class="chips" id="r-eq-chips"></div>
-        <input type="text" id="r-eq-other" class="inp" placeholder="ãã®ä»ã®åå®¹" style="margin-top:7px; display:none;">
+        <input type="text" id="r-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
       </div>
       <div class="row">
-        <label class="lbl">è¨ªåç®ç</label>
-        <input type="text" id="r-purpose" class="inp" list="dl-purpose" placeholder="å¥åã¾ãã¯é¸æ" autocomplete="off">
+        <label class="lbl">訪問目的</label>
+        <input type="text" id="r-purpose" class="inp" list="dl-purpose" placeholder="入力または選択" autocomplete="off">
       </div>
       <div class="row">
-        <label class="lbl">æ¦ç®éé¡ï¼ç®å®ï¼</label>
+        <label class="lbl">概算金額（目安）</label>
         <div class="g2">
-          <input type="number" id="r-est-lo" class="inp est" placeholder="ä¸é Â¥">
-          <input type="number" id="r-est-hi" class="inp est" placeholder="ä¸é Â¥">
+          <input type="number" id="r-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="r-est-hi" class="inp est" placeholder="上限 ¥">
         </div>
       </div>
     </div>
 
-    <!-- èµ°è¡è·é¢ã»éé¡ã»è©³ç´° -->
+    <!-- 走行距離・金額・詳細 -->
     <div class="card" style="border: 2px solid #2563eb;">
       <div class="g2">
         <div class="row">
-          <div class="amt-label">èµ°è¡è·é¢ (km)</div>
+          <div class="amt-label">走行距離 (km)</div>
           <input type="number" id="r-dist" class="inp big" placeholder="km" step="0.1" min="0" inputmode="decimal">
         </div>
         <div class="row">
-          <div class="amt-label" style="color:#059669; font-weight:800;">â­ åè¨éé¡ (å)</div>
-          <input type="number" id="r-total" class="inp big" placeholder="Â¥" min="0" inputmode="numeric" style="border-color:#059669; background:#ecfdf5;">
+          <div class="amt-label" style="color:#059669; font-weight:800;">⭐ 合計金額 (円)</div>
+          <input type="number" id="r-total" class="inp big" placeholder="¥" min="0" inputmode="numeric" style="border-color:#059669; background:#ecfdf5;">
         </div>
       </div>
       <hr class="divider">
       <div class="row">
         <datalist id="dl-comp"></datalist>
-        <label class="lbl">åä¹è</label>
-        <input type="text" id="r-comp" class="inp" list="dl-comp" placeholder="å¥åã¾ãã¯é¸æ" autocomplete="off">
+        <label class="lbl">同乗者</label>
+        <input type="text" id="r-comp" class="inp" list="dl-comp" placeholder="入力または選択" autocomplete="off">
       </div>
       <div class="row">
-        <label class="lbl">å»çã±ã¢</label>
-        <input type="text" id="r-med" class="inp" placeholder="ä¾ï¼åå¾©ææ¡ä»¶ããªã">
+        <label class="lbl">医療ケア</label>
+        <input type="text" id="r-med" class="inp" placeholder="例：回復期案件、なし">
       </div>
       <div class="row">
-        <label class="lbl">åè</label>
-        <input type="text" id="r-notes" class="inp" placeholder="ç¹è¨äºé ">
+        <label class="lbl">備考</label>
+        <input type="text" id="r-notes" class="inp" placeholder="特記事項">
       </div>
     </div>
 
     <div style="position:sticky; bottom:70px; z-index:80; padding: 0 0 6px 0;">
-      <button id="btn-save-main" class="btn-save" onclick="saveRec()">ð¾ ä¿å­ãã</button>
-      <button id="btn-cancel-edit" class="btn-full btn-gray" onclick="cancelEdit()" style="margin-top:6px;">â ã­ã£ã³ã»ã«</button>
+      <button id="btn-save-main" class="btn-save" onclick="saveRec()">💾 保存する</button>
+      <button id="btn-cancel-edit" class="btn-full btn-gray" onclick="cancelEdit()" style="margin-top:6px;">✕ キャンセル</button>
     </div>
   </div>
 </div>
 
 <!-- ============================================================
-     PAGE: ãã³ãã¬ã¼ã
+     PAGE: テンプレート
      ============================================================ -->
 <div id="page-template" class="page">
-  <div class="page-title">ð ãã³ãã¬ã¼ã</div>
+  <div class="page-title">📋 テンプレート</div>
   <p style="color:#64748b; font-size:12px; margin-bottom:12px; line-height:1.7;">
-    ã«ã¼ãï¼åºçºå°ã»å°çå°ï¼ã»ç¦ç¥ç¨å·ã»ç®çã»æ¦ç®éé¡ãç»é²ã<br>
-    è¨é²å¥åã§é¸ã¶ã ãã§èªåå¥åããã¾ãã
+    ルート（出発地・到着地）・福祉用具・目的・概算金額を登録。<br>
+    記録入力で選ぶだけで自動入力されます。
   </p>
   <div id="tpl-list"></div>
-  <button class="fab" onclick="openTMod(null)">ï¼</button>
+  <button class="fab" onclick="openTMod(null)">＋</button>
 </div>
 
 <!-- ============================================================
-     PAGE: å±¥æ­´
+     PAGE: 履歴
      ============================================================ -->
 <div id="page-history" class="page">
-  <div class="page-title">ð å±¥æ­´</div>
+  <div class="page-title">📂 履歴</div>
   <div class="mn-nav">
-    <button class="mn-btn" onclick="chM('h',-1)">â</button>
+    <button class="mn-btn" onclick="chM('h',-1)">◀</button>
     <div class="mn-disp" id="h-mon"></div>
-    <button class="mn-btn" onclick="chM('h',1)">â¶</button>
+    <button class="mn-btn" onclick="chM('h',1)">▶</button>
   </div>
   <div class="card" id="h-sum"></div>
   <div id="h-list"></div>
 </div>
 
 <!-- ============================================================
-     PAGE: åºå
+     PAGE: 出力
      ============================================================ -->
 <div id="page-calendar" class="page">
-  <div class="page-title">ð ã«ã¬ã³ãã¼</div>
+  <div class="page-title">📅 カレンダー</div>
   <div id="cal-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-    <button onclick="calMove(-1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">â¹</button>
+    <button onclick="calMove(-1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">‹</button>
     <span id="cal-title" style="font-weight:700;font-size:16px;color:#1e293b;"></span>
-    <button onclick="calMove(1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">âº</button>
+    <button onclick="calMove(1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">›</button>
   </div>
   <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>
   <div id="cal-detail" style="margin-top:14px;display:none;">
@@ -535,28 +535,28 @@
 </div>
 
 <div id="page-export" class="page">
-  <div class="page-title">ð¤ åºå</div>
+  <div class="page-title">📤 出力</div>
   <div class="mn-nav">
-    <button class="mn-btn" onclick="chM('e',-1)">â</button>
+    <button class="mn-btn" onclick="chM('e',-1)">◀</button>
     <div class="mn-disp" id="e-mon"></div>
-    <button class="mn-btn" onclick="chM('e',1)">â¶</button>
+    <button class="mn-btn" onclick="chM('e',1)">▶</button>
   </div>
   <div class="card">
-    <button class="btn-full btn-green" onclick="doCSV()">ð CSV ãã¦ã³ã­ã¼ãï¼Excelç¨ï¼</button>
-    <button class="btn-full btn-blue" onclick="doPrint()">ð¨ å°å·ï¼éè¼¸å±æåºç¨ï¼</button>
+    <button class="btn-full btn-green" onclick="doCSV()">📊 CSV ダウンロード（Excel用）</button>
+    <button class="btn-full btn-blue" onclick="doPrint()">🖨 印刷（運輸局提出用）</button>
   </div>
   
       <div class="card">
-        <div class="card-title">ð¾ ãã¼ã¿ç®¡ç</div>
-        <button class="btn-full btn-green" onclick="doBackup()">ð¥ ããã¯ã¢ããï¼ãã¦ã³ã­ã¼ãï¼</button>
-        <button class="btn-full btn-blue" onclick="doRestore()">ð¤ å¾©åï¼ãã¡ã¤ã«ãé¸æï¼</button>
+        <div class="card-title">💾 データ管理</div>
+        <button class="btn-full btn-green" onclick="doBackup()">📥 バックアップ（ダウンロード）</button>
+        <button class="btn-full btn-blue" onclick="doRestore()">📤 復元（ファイルを選択）</button>
         <input type="file" id="restore-file" accept=".json" style="display:none" onchange="handleRestore(this)">
-        <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">æ©ç¨®å¤æ´ãä¸ãä¸ã«åãã¦ãå®æçã«ããã¯ã¢ããããããããã¾ã</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">機種変更や万が一に備えて、定期的にバックアップをおすすめします</div>
       </div>
 <div class="card">
     <div class="card-title">📍 地点マスター</div>
     <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <input type="text" id="loc-name" class="inp" placeholder="地点名（例：○○病院）" style="flex:1;">
+      <input type="text" id="loc-name" class="inp" placeholder="地点名（例：〇〇病院）" style="flex:1;">
       <select id="loc-type" class="inp" style="width:auto;min-width:80px;">
         <option value="both">両方</option>
         <option value="from">出発地</option>
@@ -568,13 +568,13 @@
     <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">登録した地点は出発地・到着地の入力時に候補として表示されます</div>
   </div>
 <div class="card">
-    <div class="card-title">ä½¿ãæ¹</div>
+    <div class="card-title">使い方</div>
     <p style="font-size:12px; color:#64748b; line-height:1.9;">
-      <b>â  ãã³ãã¬ã¼ãã«ã«ã¼ããç»é²</b>ï¼åæ¥ã¾ã§ï¼<br>
-      ãåºçºå°ã»å°çå°ã»ç¦ç¥ç¨å·ã»è¨ªåç®çã»æ¦ç®éé¡<br>
-      <b>â¡ è¨é²å¥åã§ãã³ãã¬ã¼ããé¸ã¶</b><br>
-      ãå©ç¨èåãå¥å â æå»ã»è·é¢ã»åè¨éé¡ãè¨é²<br>
-      <b>â¢ ææ«ã«åºå</b>ãCSV or å°å·
+      <b>① テンプレートにルートを登録</b>（前日まで）<br>
+      　出発地・到着地・福祉用具・訪問目的・概算金額<br>
+      <b>② 記録入力でテンプレートを選ぶ</b><br>
+      　利用者名を入力 → 時刻・距離・合計金額を記録<br>
+      <b>③ 月末に出力</b>　CSV or 印刷
     </p>
   </div>
 </div>
@@ -583,23 +583,23 @@
 <nav class="nav-bar">
   <button class="nav-item active" id="nav-record" onclick="showPage('record')">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-    è¨é²å¥å
+    記録入力
   </button>
   <button class="nav-item" id="nav-template" onclick="showPage('template')">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-    ãã³ãã¬ã¼ã
+    テンプレート
   </button>
   <button class="nav-item" id="nav-history" onclick="showPage('history')">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    å±¥æ­´
+    履歴
   </button>
   <button class="nav-item" id="nav-export" onclick="showPage('export')">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-    åºå
+    出力
   </button>
 <button class="nav-item" id="nav-calendar" onclick="showPage('calendar')">
   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2 5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-  ã«ã¬ã³ãã¼
+  カレンダー
 </button>
 </nav>
 
@@ -607,45 +607,45 @@
 <div id="tmod" class="modal-bg">
   <div class="modal-sh">
     <div class="mh"></div>
-    <div class="mt" id="tmod-title">ãã³ãã¬ã¼ããè¿½å </div>
+    <div class="mt" id="tmod-title">テンプレートを追加</div>
     <input type="hidden" id="t-id">
     <div class="g2">
       <div class="row">
-        <label class="lbl">åºçºå°</label>
-        <input type="text" id="t-from" class="inp" placeholder="åºçºå°">
+        <label class="lbl">出発地</label>
+        <input type="text" id="t-from" class="inp" placeholder="出発地">
       </div>
       <div class="row">
-        <label class="lbl">å°çå°</label>
-        <input type="text" id="t-to" class="inp" placeholder="å°çå°">
+        <label class="lbl">到着地</label>
+        <input type="text" id="t-to" class="inp" placeholder="到着地">
       </div>
     </div>
     <div class="row">
-      <label class="lbl">ç¦ç¥ç¨å·</label>
+      <label class="lbl">福祉用具</label>
       <div class="chips" id="t-eq-chips"></div>
-      <input type="text" id="t-eq-other" class="inp" placeholder="ãã®ä»ã®åå®¹" style="margin-top:7px; display:none;">
+      <input type="text" id="t-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
     </div>
     <div class="row">
-      <label class="lbl">è¨ªåç®ç</label>
-      <input type="text" id="t-purpose" class="inp" placeholder="ä¾ï¼è»¢é¢çéæ¬éãéé¢">
+      <label class="lbl">訪問目的</label>
+      <input type="text" id="t-purpose" class="inp" placeholder="例：転院片道搬送、通院">
     </div>
     <div class="row">
-      <label class="lbl">æ¦ç®éé¡ï¼ç®å®ã»åèå¤ï¼</label>
+      <label class="lbl">概算金額（目安・参考値）</label>
         <div class="g2">
-          <input type="number" id="t-est-lo" class="inp est" placeholder="ä¸é Â¥">
-          <input type="number" id="t-est-hi" class="inp est" placeholder="ä¸é Â¥">
+          <input type="number" id="t-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="t-est-hi" class="inp est" placeholder="上限 ¥">
         </div>
-      <div style="font-size:10px; color:#94a3b8; margin-top:3px;">è¨é²å¥åæã«èªåå¥åããã¾ã</div>
+      <div style="font-size:10px; color:#94a3b8; margin-top:3px;">記録入力時に自動入力されます</div>
     </div>
     <div class="row">
-      <label class="lbl">åä¹è</label>
-      <input type="text" id="t-comp" class="inp" placeholder="ä¾ï¼å®¶æåä¹ãè¿½èµ°ãåä¹ãã·">
+      <label class="lbl">同乗者</label>
+      <input type="text" id="t-comp" class="inp" placeholder="例：家族同乗、追走、同乗ナシ">
     </div>
     <div class="row">
-      <label class="lbl">åºå®ã¡ã¢</label>
-      <input type="text" id="t-notes" class="inp" placeholder="æ¯ååãã¡ã¢ãããã°">
+      <label class="lbl">固定メモ</label>
+      <input type="text" id="t-notes" class="inp" placeholder="毎回同じメモがあれば">
     </div>
-    <button class="btn-save" onclick="saveTpl()">ð¾ ä¿å­ãã</button>
-    <button class="btn-full btn-gray" onclick="closeTMod()" style="margin-top:6px;">ã­ã£ã³ã»ã«</button>
+    <button class="btn-save" onclick="saveTpl()">💾 保存する</button>
+    <button class="btn-full btn-gray" onclick="closeTMod()" style="margin-top:6px;">キャンセル</button>
   </div>
 </div>
 
@@ -653,7 +653,7 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-const EQ = ['è»ãã', 'ã¹ãã¬ããã£ã¼', 'ãªã¯ã©ã¤ãã³ã°', 'æ­©è¡', 'ãã®ä»'];
+const EQ = ['車いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
 const KR = 'kt_rec_v3';
 const KT = 'kt_tpl_v3';
 const KL = 'kt_locations_v1';
@@ -661,7 +661,7 @@ const KL = 'kt_locations_v1';
 let recs = [], tpls = [], locations = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
-let curV = '1', curAL = 'ok', curDir = 'â';
+let curV = '1', curAL = 'ok', curDir = '→';
 
 const $ = id => document.getElementById(id);
 const load = k => { try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e) { return []; } };
@@ -674,18 +674,18 @@ const fN = n => Number(n||0).toLocaleString('ja-JP');
 function today() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function nowT()   { const d=new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
 function fDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${parseInt(m)}/${parseInt(d)}`; }
-function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}å¹´${parseInt(m)}æ${parseInt(d)}æ¥`; }
-function fYM(y,m) { return `${y}å¹´${m}æ`; }
+function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}年${parseInt(m)}月${parseInt(d)}日`; }
+function fYM(y,m) { return `${y}年${m}月`; }
 function fEst(r) {
   var lo = r.estimateLo || r.estimate || 0, hi = r.estimateHi || 0;
   if (!lo && !hi) return '';
-  if (lo && hi) return 'Â¥' + fN(lo) + 'ãÂ¥' + fN(hi);
-  if (lo) return 'Â¥' + fN(lo) + 'ã';
-  return 'ãÂ¥' + fN(hi);
+  if (lo && hi) return '¥' + fN(lo) + '〜¥' + fN(hi);
+  if (lo) return '¥' + fN(lo) + '〜';
+  return '〜¥' + fN(hi);
 }
 
-// ââ Init ââ
-// ââ ã«ã¬ã³ãã¼ ââ
+// ── Init ──
+// ── カレンダー ──
 var calYear, calMonth;
 function initCal() {
   var now = new Date();
@@ -699,19 +699,19 @@ function calMove(d) {
   renderCal();
 }
 function renderCal() {
-  var months = ['1æ','2æ','3æ','4æ','5æ','6æ','7æ','8æ','9æ','10æ','11æ','12æ'];
-  var days = ['æ¥','æ','ç«','æ°´','æ¨','é','å'];
-  document.getElementById('cal-title').textContent = calYear + 'å¹´ ' + months[calMonth];
+  var months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var days = ['日','月','火','水','木','金','土'];
+  document.getElementById('cal-title').textContent = calYear + '年 ' + months[calMonth];
   var grid = document.getElementById('cal-grid');
   grid.innerHTML = '';
-  // ææ¥ãããã¼
+  // 曜日ヘッダー
   days.forEach(function(d, i) {
     var hd = document.createElement('div');
     hd.textContent = d;
     hd.style.cssText = 'font-size:11px;font-weight:700;padding:4px 0;color:' + (i===0?'#ef4444':i===6?'#3b82f6':'#64748b');
     grid.appendChild(hd);
   });
-  // è¨é²ãæ¥ä»ã§ãããå
+  // 記録を日付でマップ化
   var recs = JSON.parse(localStorage.getItem('kt_rec_v3') || '[]');
   var recMap = {};
   recs.forEach(function(r) {
@@ -719,16 +719,16 @@ function renderCal() {
     if (!recMap[d]) recMap[d] = [];
     recMap[d].push(r);
   });
-  // æã®æåã®ææ¥ã¨æ¥æ°
+  // 月の最初の曜日と日数
   var firstDay = new Date(calYear, calMonth, 1).getDay();
   var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   var today = new Date();
   var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-  // ç©ºç½ã»ã«
+  // 空白セル
   for (var i = 0; i < firstDay; i++) {
     grid.appendChild(document.createElement('div'));
   }
-  // æ¥ä»ã»ã«
+  // 日付セル
   for (var day = 1; day <= daysInMonth; day++) {
     var dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
     var cell = document.createElement('div');
@@ -742,10 +742,10 @@ function renderCal() {
     cell.appendChild(numEl);
     if (hasRec) {
       var cnt = document.createElement('div');
-      cnt.textContent = recMap[dateStr].length + 'ä»¶';
+      cnt.textContent = recMap[dateStr].length + '件';
       cnt.style.cssText = 'font-size:10px;color:#2563eb;font-weight:700;';
       cell.appendChild(cnt);
-      // ååãå°ããè¡¨ç¤ºï¼æå¤§2ä»¶ï¼
+      // 名前を小さく表示（最大2件）
       recMap[dateStr].slice(0,2).forEach(function(r) {
         var nm = document.createElement('div');
         nm.textContent = (r.user||'').substring(0,4);
@@ -756,19 +756,19 @@ function renderCal() {
     }
     grid.appendChild(cell);
   }
-  // è©³ç´°ããã«ãé ã
+  // 詳細パネルを隠す
   document.getElementById('cal-detail').style.display = 'none';
 }
 function showCalDetail(dateStr) {
   var recs = JSON.parse(localStorage.getItem('kt_rec_v3') || '[]');
   var dayRecs = recs.filter(function(r){ return r.date === dateStr; });
-  // åºçºæå»ã§ã½ã¼ãï¼ç©ºã®å ´åã¯æ«å°¾ï¼
+  // 出発時刻でソート（空の場合は末尾）
   dayRecs.sort(function(a,b){
     var ta = a.t3 || '99:99', tb = b.t3 || '99:99';
     return ta < tb ? -1 : ta > tb ? 1 : 0;
   });
   var parts = dateStr.split('-');
-  document.getElementById('cal-detail-title').textContent = parts[0]+'å¹´'+parseInt(parts[1])+'æ'+parseInt(parts[2])+'æ¥ ã®è¨é²';
+  document.getElementById('cal-detail-title').textContent = parts[0]+'年'+parseInt(parts[1])+'月'+parseInt(parts[2])+'日 の記録';
   var list = document.getElementById('cal-detail-list');
   list.innerHTML = '';
   dayRecs.forEach(function(r) {
@@ -779,16 +779,16 @@ function showCalDetail(dateStr) {
     time.style.cssText = 'font-size:15px;font-weight:800;color:#2563eb;min-width:42px;';
     var info = document.createElement('div');
     var name = document.createElement('div');
-    name.textContent = r.user || 'ï¼ååãªãï¼';
+    name.textContent = r.user || '（名前なし）';
     name.style.cssText = 'font-size:14px;font-weight:700;color:#1e293b;';
     var sub = document.createElement('div');
-    sub.textContent = (r.purpose||'') + (r.from ? ' ð'+r.from : '') + (r.to ? ' '+(r.direction||'â')+r.to : '');
+    sub.textContent = (r.purpose||'') + (r.from ? ' 📍'+r.from : '') + (r.to ? ' '+(r.direction||'→')+r.to : '');
     sub.style.cssText = 'font-size:11px;color:#64748b;margin-top:2px;';
     info.appendChild(name);
     info.appendChild(sub);
     var editBtn = document.createElement('button');
-    editBtn.textContent = 'âï¸';
-    editBtn.title = 'ç·¨é';
+    editBtn.textContent = '✏️';
+    editBtn.title = '編集';
     editBtn.style.cssText = 'margin-left:auto;padding:6px 10px;border:none;border-radius:8px;background:#eff6ff;color:#2563eb;font-size:16px;cursor:pointer;flex-shrink:0;';
     (function(rec){ editBtn.onclick = function(){ editRec(rec.id); }; })(r);
     item.appendChild(time);
@@ -800,7 +800,7 @@ function showCalDetail(dateStr) {
   document.getElementById('cal-detail').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
-// ââ ã«ã¹ã¿ã æå»ã»ã¬ã¯ã ââ
+// ── カスタム時刻セレクト ──
 function buildTimeSelects() {
   ['r-t-out','r-t-in','r-t3','r-t4'].forEach(function(id) {
     var hSel = $(id+'-h'), mSel = $(id+'-m');
@@ -832,7 +832,7 @@ function updateDateCount() {
   renderDayUserCards();
 }
 
-// ââ Morning section ââ
+// ── Morning section ──
 var _morningDone = false;
 
 function onDateChange() {
@@ -911,7 +911,7 @@ function onDateChange() {
         $('r-odo-in').value = '';
     return;
   }
-  // è»ä¸¡ãå¾©å
+  // 車両を復元
       if (m.vehicle) {
         curV = m.vehicle;
         document.querySelectorAll('.vm button').forEach(function(b) {
@@ -936,7 +936,7 @@ function onDateChange() {
   completeMorning();
 }
 
-// ââ Day user cards ââ
+// ── Day user cards ──
 function renderDayUserCards() {
   var d = $('r-date').value;
   var list = $('day-users-list');
@@ -945,27 +945,27 @@ function renderDayUserCards() {
   var dayRecs = recs.filter(function(r){ return r.date === d; });
   dayRecs.sort(function(a,b){ return (a.t3||'99:99').localeCompare(b.t3||'99:99'); });
   if (!dayRecs.length) {
-    list.innerHTML = '<div style="text-align:center;padding:14px 0 6px;color:#94a3b8;font-size:13px;">ãã®æ¥ã®è¨é²ã¯ã¾ã ããã¾ãã</div>';
+    list.innerHTML = '<div style="text-align:center;padding:14px 0 6px;color:#94a3b8;font-size:13px;">この日の記録はまだありませこ</div>';
     return;
   }
   list.innerHTML = dayRecs.map(function(r) {
     var route = '';
-    if (r.t3 || r.t4) route += (r.t3||'--') + 'ã' + (r.t4||'--');
+    if (r.t3 || r.t4) route += (r.t3||'--') + '〜' + (r.t4||'--');
     if (r.from) route += (route ? ' ' : '') + esc(r.from);
-    if (r.to)   route += (r.direction || 'â') + esc(r.to);
-    if (r.total) route += (route ? '  ' : '') + 'Â¥' + fN(r.total);
+    if (r.to)   route += (r.direction || '→') + esc(r.to);
+    if (r.total) route += (route ? '  ' : '') + '¥' + fN(r.total);
     return '<div class="user-card">' +
       '<div class="uc-time">' + esc(r.t3 || '--:--') + '</div>' +
       '<div class="uc-info">' +
-        '<div class="uc-name">' + (esc(r.user) || 'ï¼ååãªãï¼') + '</div>' +
+        '<div class="uc-name">' + (esc(r.user) || '（名前なし）') + '</div>' +
         '<div class="uc-route">' + route + '</div>' +
       '</div>' +
-      '<button class="uc-edit" onclick="editRec(\'' + r.id + '\')">âï¸</button>' +
+      '<button class="uc-edit" onclick="editRec(\'' + r.id + '\')">✏️</button>' +
     '</div>';
   }).join('');
 }
 
-// ââ User form show/hide ââ
+// ── User form show/hide ──
 function showUserForm() {
   $('user-form-section').style.display = 'block';
   $('btn-add-user').style.display = 'none';
@@ -982,7 +982,7 @@ function hideUserForm() {
   renderDayUserCards();
 }
 
-// ââ Template picker (inside user form) ââ
+// ── Template picker (inside user form) ──
 function renderTplPicker() {
   var card = $('tpl-picker-card');
   var list = $('tpl-picker-list');
@@ -990,7 +990,7 @@ function renderTplPicker() {
   if (!tpls.length) { card.style.display = 'none'; return; }
   card.style.display = 'block';
   list.innerHTML = tpls.map(function(t) {
-    var label = [t.from, t.to].filter(Boolean).join('â') || 'ï¼ã«ã¼ããªãï¼';
+    var label = [t.from, t.to].filter(Boolean).join('→') || '（ルートなし）';
     if (t.purpose) label += '  ' + t.purpose;
     return '<button class="tpl-chip" onclick="applyTemplate(\'' + t.id + '\')" id="tplchip-' + t.id + '">' + esc(label) + '</button>';
   }).join('');
@@ -1032,7 +1032,7 @@ function init() {
   restoreMorning();
     loadLocations();
     renderLocations();
-      // ãã©ã¦ã¶èªåå¾©åå¯¾ç­ï¼éå»¶ã§å¥åº«è·é¢ãåãã§ãã¯
+      // ブラウザ自動復元対策：遅延で入庫距離を再チェック
       setTimeout(function() {
         var m = localStorage.getItem('kt_morning_v1');
         if (!m || JSON.parse(m).date !== today()) {
@@ -1041,7 +1041,7 @@ function init() {
       }, 200);
 }
 
-// ââ Page ââ
+// ── Page ──
 function showPage(n) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -1051,7 +1051,7 @@ function showPage(n) {
 if(n==='calendar') renderCal();
 }
 
-// ââ Toggle ââ
+// ── Toggle ──
 function setTog(gid, cls, btn) {
   document.querySelectorAll(`#${gid} .tog`).forEach(b => b.classList.remove('s-bl','s-gr','s-rd'));
   btn.classList.add(cls);
@@ -1059,11 +1059,11 @@ function setTog(gid, cls, btn) {
   if (gid==='dir-g') curDir = btn.dataset.v;
 }
 
-// ââ Vehicle ââ
+// ── Vehicle ──
 function pickV(btn) {
       document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
       btn.classList.add('sel'); curV = btn.dataset.v;
-      // è»ä¸¡ãã¨ã®åæ¥å¥åº«è·é¢ãåºåº«è·é¢ã«ã»ãã
+      // 車両ごとの前日入庫距離を出庫距離にセット
       var savedOdo = localStorage.getItem('kt_odo_' + curV);
       $('r-odo-out').value = savedOdo || '';
       $('r-odo-in').value = '';
@@ -1076,19 +1076,19 @@ function getLastOdoIn(vehicle) {
   return matched[0].odoIn;
 }
 
-// ââ Eq helpers ââ
+// ── Eq helpers ──
 function normEq(arr) {
-  return (arr||[]).map(e => typeof e==='string' ? {name:e, own:'ææ'} : e);
+  return (arr||[]).map(e => typeof e==='string' ? {name:e, own:'所有'} : e);
 }
 function eqLabel(e) {
   return typeof e==='string' ? e : e.name;
 }
 function eqOwn(e) {
-  return typeof e==='string' ? 'ææ' : (e.own||'ææ');
+  return typeof e==='string' ? '所有' : (e.own||'所有');
 }
 
-// ââ Chips (3-state: off â ææ â è²¸åº â off / æ­©è¡ã»ãã®ä»ã¯ off â on â off) ââ
-const EQ_SIMPLE = ['æ­©è¡', 'ãã®ä»']; // ææ/è²¸åºãµã¤ã¯ã«ãªãã»ããã¸ãªã
+// ── Chips (3-state: off → 所有 → 貸出 → off / 歩行・その他は off → on → off) ──
+const EQ_SIMPLE = ['歩行', 'その他']; // 所有/貸出サイクルなし・バッジなし
 function renderChips(cid, arr, otherId) {
   const w = $(cid); w.innerHTML = '';
   EQ.forEach(eq => {
@@ -1097,19 +1097,19 @@ function renderChips(cid, arr, otherId) {
     const state = idx >= 0 ? (isSimple ? 'on' : eqOwn(arr[idx])) : null;
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'chip' + (state === 'on' ? ' own' : state==='ææ' ? ' own' : state==='è²¸åº' ? ' rent' : '');
+    b.className = 'chip' + (state === 'on' ? ' own' : state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
     b.innerHTML = esc(eq) + (!isSimple && state ? `<span class="eq-bdg">${state}</span>` : '');
     b.onclick = () => {
       if (isSimple) {
-        if (idx < 0) arr.push({name: eq, own: 'on'});  // off â on
-        else arr.splice(idx, 1);                         // on â off
+        if (idx < 0) arr.push({name: eq, own: 'on'});  // off → on
+        else arr.splice(idx, 1);                         // on → off
       } else {
         if (idx < 0) {
-          arr.push({name: eq, own: 'ææ'});           // off â ææ
-        } else if (arr[idx].own === 'ææ' || arr[idx] === 'ææ') {
-          arr[idx] = {name: eq, own: 'è²¸åº'};          // ææ â è²¸åº
+          arr.push({name: eq, own: '所有'});           // off → 所有
+        } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
+          arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
         } else {
-          arr.splice(idx, 1);                           // è²¸åº â off
+          arr.splice(idx, 1);                           // 貸出 → off
         }
       }
       renderChips(cid, arr, otherId);
@@ -1117,12 +1117,12 @@ function renderChips(cid, arr, otherId) {
     w.appendChild(b);
   });
   if (otherId) {
-    $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='ãã®ä»') ? 'block' : 'none';
+    $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
   }
 }
 
-// ââ Datalistsï¼ãã³ãã¬ã¼ãããèªååè£ãçæï¼ ââ
-function refreshDrop() { refreshDataLists(); }  // å¾æ¹äºæ
+// ── Datalists（テンプレートから自動候補を生成） ──
+function refreshDrop() { refreshDataLists(); }  // 後方互換
 
 function refreshDataLists() {
   const locFroms = locations.filter(l=>l.type!=='to').map(l=>l.name);
@@ -1141,7 +1141,7 @@ function refreshDataLists() {
   fill('dl-purpose', purposes);
 }
 
-// ââ åºçºå°ãå¥åããããèªåå¥å ââ
+// ── 出発地が入力されたら自動入力 ──
 function autoFill() {
   const from = $('r-from').value.trim();
   if (!from) return;
@@ -1159,17 +1159,17 @@ function autoFill() {
   }
 }
 
-// ââ Save Record ââ
+// ── Save Record ──
 let _editId = null;
 
 function saveRec() {
-  if (!$('r-date').value)         { alert('æ¥ä»ãå¥åãã¦ãã ãã'); return; }
-  if (!$('r-user').value.trim())  { alert('å©ç¨èåãå¥åãã¦ãã ãã'); return; }
+  if (!$('r-date').value)         { alert('日付を入力してください'); return; }
+  if (!$('r-user').value.trim())  { alert('利用者名を入力してください'); return; }
 
   // estimate range
   const otherText = $('r-eq-other').value.trim();
   const eqArr = normEq(rEq).map(e =>
-    e.name === 'ãã®ä»' && otherText ? {name: 'ãã®ä»('+otherText+')', own: e.own} : e
+    e.name === 'その他' && otherText ? {name: 'その他('+otherText+')', own: e.own} : e
   );
 
   const rec = {
@@ -1202,10 +1202,10 @@ function saveRec() {
   if (_editId) {
     const idx = recs.findIndex(r => r.id === _editId);
     if (idx >= 0) recs[idx] = rec; else recs.push(rec);
-    toast('â æ´æ°ãã¾ãã');
+    toast('✅ 更新しました');
   } else {
     recs.push(rec);
-    toast('â ä¿å­ãã¾ãã');
+    toast('✅ 保存しました');
   }
   sv(KR, recs);
   clearF();
@@ -1215,7 +1215,7 @@ function editRec(id) {
   const r = recs.find(x => x.id === id);
   if (!r) return;
   _editId = id;
-  // ãã©ã¼ã ã«å¤ãã»ãã
+  // フォームに値をセット
   $('r-date').value    = r.date    || '';
   setTimeVal('r-t-out', r.tOut || '');
   setTimeVal('r-t-in',  r.tIn  || '');
@@ -1234,7 +1234,7 @@ function editRec(id) {
   $('r-notes').value   = r.notes   || '';
   $('r-odo-out').value = r.odoOut  ? String(r.odoOut) : '';
   $('r-odo-in').value  = r.odoIn   ? String(r.odoIn)  : '';
-  // è»ä¸¡
+  // 車両
   curV = r.vehicle || '1';
   document.querySelectorAll('.vm button').forEach(b => {
     b.classList.remove('sel');
@@ -1246,82 +1246,82 @@ function editRec(id) {
     b.classList.remove('s-gr','s-rd');
     if (b.dataset.v === curAL) b.classList.add(curAL === 'ok' ? 's-gr' : 's-rd');
   });
-  // æ¹å
-  curDir = r.direction || 'â';
+  // 方向
+  curDir = r.direction || '→';
   document.querySelectorAll('#dir-g .tog').forEach(b => {
     b.classList.remove('s-bl');
     if (b.dataset.v === curDir) b.classList.add('s-bl');
   });
-  // ç¦ç¥ç¨å·
+  // 福祉用具
   rEq.length = 0;
   normEq(r.equipment||[]).forEach(e => rEq.push(e));
   renderChips('r-eq-chips', rEq, 'r-eq-other');
-  // ãã¿ã³åãæ¿ã
-  $('btn-save-main').textContent = 'âï¸ æ´æ°ãã';
+  // ボタン切り替え
+  $('btn-save-main').textContent = '✏️ 更新する';
   $('btn-save-main').style.background = '#059669';
-  // è¨é²å¥åã¿ãã¸ç§»å + ãã©ã¼ã ãè¡¨ç¤º
+  // 記録入力タブへ移動 + フォームを表示
   showPage('record');
   openMorning();
   showUserForm();
-  toast('ð ç·¨éã¢ã¼ãï¼æ´æ°ããã§ä¿å­ãã¾ã');
+  toast('📝 編集モード：更新するで保存します');
 }
 
 function cancelEdit() {
   _editId = null;
-  $('btn-save-main').textContent = 'ð¾ ä¿å­ãã';
+  $('btn-save-main').textContent = '💾 保存する';
   $('btn-save-main').style.background = '';
   clearF();
-  toast('ã­ã£ã³ã»ã«ãã¾ãã');
+  toast('キャンセルしました');
 }
 
 function clearF() {
   _editId = null;
-  $('btn-save-main').textContent = 'ð¾ ä¿å­ãã';
+  $('btn-save-main').textContent = '💾 保存する';
   $('btn-save-main').style.background = '';
-  // æ¥ä»ã»ALã»è»ä¸¡ã»odoã»tOut/tIn ã¯ä¿æï¼æã®è¨é²ã¯1æ¥1åãªã®ã§ä¿æï¼
+  // 日付・AL・車両・odo・tOut/tIn は保持（朝の記録は1日1回なので保持）
   ['r-user','r-from','r-to','r-purpose','r-est-lo','r-est-hi',
    'r-dist','r-total','r-comp','r-med','r-notes'].forEach(function(id){ if($(id)) $(id).value=''; });
   setTimeVal('r-t3', ''); setTimeVal('r-t4', '');
   if ($('r-eq-other')) $('r-eq-other').value = '';
   rEq.length = 0;
   renderChips('r-eq-chips', rEq, 'r-eq-other');
-  // æ¹åãªã»ãã
-  curDir = 'â';
+  // 方向リセット
+  curDir = '→';
   document.querySelectorAll('#dir-g .tog').forEach(b => {
     b.classList.remove('s-bl');
-    if (b.dataset.v === 'â') b.classList.add('s-bl');
+    if (b.dataset.v === '→') b.classList.add('s-bl');
   });
   hideUserForm();
 }
 
-// ââ Templates ââ
+// ── Templates ──
 function renderTpls() {
   const el = $('tpl-list');
   if (!tpls.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-i">ð</div><div class="empty-t">ãã³ãã¬ã¼ããããã¾ãã<br>ï¼ãã¿ã³ã§ç»é²ãã¦ãã ãã</div></div>`;
+    el.innerHTML = `<div class="empty"><div class="empty-i">📋</div><div class="empty-t">テンプレートがありません<br>＋ボタンで登録してください</div></div>`;
     return;
   }
   el.innerHTML = tpls.map(t => `
     <div class="li">
       <div class="li-hd">
         <div>
-          <div class="li-name">ð ${esc(t.from)} â ${esc(t.to)}</div>
+          <div class="li-name">📍 ${esc(t.from)} → ${esc(t.to)}</div>
           ${t.purpose ? `<div class="li-sub">${esc(t.purpose)}</div>` : ''}
         </div>
-        ${(t.estimateLo||t.estimateHi) ? `<div style="font-weight:700;color:#059669;font-size:13px;">æ¦ç® ${fEst(t)}</div>` : ''}
+        ${(t.estimateLo||t.estimateHi) ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ${fEst(t)}</div>` : ''}
       </div>
       <div class="li-meta">
-        ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='è²¸åº'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+        ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
       </div>
       <div class="li-acts">
-        <button class="btn-sm btn-e" onclick="openTMod('${t.id}')">ç·¨é</button>
-        <button class="btn-sm btn-d" onclick="delTpl('${t.id}')">åé¤</button>
+        <button class="btn-sm btn-e" onclick="openTMod('${t.id}')">編集</button>
+        <button class="btn-sm btn-d" onclick="delTpl('${t.id}')">削除</button>
       </div>
     </div>`).join('');
 }
 
 function openTMod(id) {
-  $('tmod-title').textContent = id ? 'ãã³ãã¬ã¼ããç·¨é' : 'ãã³ãã¬ã¼ããè¿½å ';
+  $('tmod-title').textContent = id ? 'テンプレートを編集' : 'テンプレートを追加';
   tEq.length = 0;
   if (id) {
     const t = tpls.find(x=>x.id===id);
@@ -1343,10 +1343,10 @@ function openTMod(id) {
 function closeTMod() { $('tmod').classList.remove('open'); }
 
 function saveTpl() {
-  if (!$('t-from').value.trim() && !$('t-to').value.trim()) { alert('åºçºå°ãå°çå°ãå¥åãã¦ãã ãã'); return; }
+  if (!$('t-from').value.trim() && !$('t-to').value.trim()) { alert('出発地か到着地を入力してください'); return; }
   const tOtherText = $('t-eq-other').value.trim();
   const eqArr = normEq(tEq).map(e =>
-    e.name === 'ãã®ä»' && tOtherText ? {name: 'ãã®ä»('+tOtherText+')', own: e.own} : e
+    e.name === 'その他' && tOtherText ? {name: 'その他('+tOtherText+')', own: e.own} : e
   );
   const t = {
     id:        $('t-id').value || uid(),
@@ -1362,15 +1362,15 @@ function saveTpl() {
   const id = $('t-id').value;
   if (id) { const i=tpls.findIndex(x=>x.id===id); if(i>=0) tpls[i]=t; } else tpls.push(t);
   sv(KT, tpls); closeTMod(); renderTpls(); refreshDrop();
-  toast('â ãã³ãã¬ã¼ãä¿å­');
+  toast('✅ テンプレート保存');
 }
 
 function delTpl(id) {
-  if (!confirm('åé¤ãã¾ããï¼')) return;
+  if (!confirm('削除しますか？')) return;
   tpls = tpls.filter(t=>t.id!==id); sv(KT, tpls); renderTpls(); refreshDrop();
 }
 
-// ââ History ââ
+// ── History ──
 function getMRecs(y,m) {
   const pf = `${y}-${pad(m)}`;
   return recs.filter(r=>r.date&&r.date.startsWith(pf))
@@ -1381,54 +1381,54 @@ function renderHist() {
   const rs = getMRecs(hYM.y, hYM.m);
   const sum = $('h-sum'), list = $('h-list');
   if (!rs.length) {
-    sum.innerHTML = `<div style="color:#94a3b8;font-size:13px;text-align:center;padding:6px;">ãã®æã®è¨é²ã¯ããã¾ãã</div>`;
+    sum.innerHTML = `<div style="color:#94a3b8;font-size:13px;text-align:center;padding:6px;">この月の記録はありません</div>`;
     list.innerHTML=''; return;
   }
   const km  = rs.reduce((s,r)=>s+(r.dist||0),0);
   const rev = rs.reduce((s,r)=>s+(r.total||0),0);
   sum.innerHTML = `<div class="sg">
-    <div class="si"><div class="sv">${rs.length}</div><div class="sl">ä»¶æ°</div></div>
-    <div class="si"><div class="sv">${km.toFixed(1)}</div><div class="sl">ç·km</div></div>
-    <div class="si"><div class="sv">Â¥${fN(rev)}</div><div class="sl">ç·å£²ä¸</div></div>
+    <div class="si"><div class="sv">${rs.length}</div><div class="sl">件数</div></div>
+    <div class="si"><div class="sv">${km.toFixed(1)}</div><div class="sl">総km</div></div>
+    <div class="si"><div class="sv">¥${fN(rev)}</div><div class="sl">総売上</div></div>
   </div>`;
 
   list.innerHTML = rs.map((r,i)=>`
     <div class="li" onclick="$('d${i}').classList.toggle('open')">
       <div class="li-hd">
         <div>
-          <div class="li-name">${esc(r.user)||'(ååãªã)'}</div>
-          <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'â'}${esc(r.to)}</div>
+          <div class="li-name">${esc(r.user)||'(名前なし)'}</div>
+          <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'→'}${esc(r.to)}</div>
         </div>
         <div style="text-align:right;">
-          <div style="font-weight:800;color:#059669;font-size:15px;">Â¥${fN(r.total)}</div>
+          <div style="font-weight:800;color:#059669;font-size:15px;">¥${fN(r.total)}</div>
           <div style="font-size:11px;color:#94a3b8;">${r.dist}km</div>
         </div>
       </div>
       <div class="li-meta">
-        <span class="bdg b-bl">è»${r.vehicle}</span>
-        <span class="bdg ${r.alcohol==='ok'?'b-gr':'b-rd'}">AL${r.alcohol==='ok'?'â':'Ã'}</span>
-        ${normEq(r.equipment||[]).map(e=>`<span class="bdg ${e.own==='è²¸åº'?'b-or':'b-bl'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+        <span class="bdg b-bl">車${r.vehicle}</span>
+        <span class="bdg ${r.alcohol==='ok'?'b-gr':'b-rd'}">AL${r.alcohol==='ok'?'○':'×'}</span>
+        ${normEq(r.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-bl'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
         ${r.medical?`<span class="bdg b-rd">${esc(r.medical)}</span>`:''}
       </div>
       <div id="d${i}" class="det">
-        <div class="dr"><span class="dk">åºåº«è·é¢</span><span class="dv">${r.odoOut||'â'} km</span></div>
-        <div class="dr"><span class="dk">å¥åº«è·é¢</span><span class="dv">${r.odoIn||'â'} km</span></div>
-        <div class="dr"><span class="dk">åºçºæå»</span><span class="dv">${r.t3||'â'}</span></div>
-        <div class="dr"><span class="dk">å°çæå»</span><span class="dv">${r.t4||'â'}</span></div>
-        <div class="dr"><span class="dk">åä¹è</span><span class="dv">${esc(r.comp)||'â'}</span></div>
-        <div class="dr"><span class="dk">è¨ªåç®ç</span><span class="dv">${esc(r.purpose)||'â'}</span></div>
-        ${(r.estimateLo||r.estimateHi||r.estimate)?`<div class="dr"><span class="dk">æ¦ç®</span><span class="dv">${fEst(r)}</span></div>`:''}
-        ${r.notes?`<div class="dr"><span class="dk">åè</span><span class="dv">${esc(r.notes)}</span></div>`:''}
+        <div class="dr"><span class="dk">出庫距離</span><span class="dv">${r.odoOut||'—'} km</span></div>
+        <div class="dr"><span class="dk">入庫距離</span><span class="dv">${r.odoIn||'—'} km</span></div>
+        <div class="dr"><span class="dk">出発時刻</span><span class="dv">${r.t3||'—'}</span></div>
+        <div class="dr"><span class="dk">到着時刻</span><span class="dv">${r.t4||'—'}</span></div>
+        <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
+        <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
+        ${(r.estimateLo||r.estimateHi||r.estimate)?`<div class="dr"><span class="dk">概算</span><span class="dv">${fEst(r)}</span></div>`:''}
+        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;display:flex;gap:8px;">
-          <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">âï¸ ç·¨é</button>
-          <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">åé¤</button>
+          <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
+          <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
     </div>`).join('');
 }
 
 function delRec(id) {
-  if(!confirm('åé¤ãã¾ããï¼')) return;
+  if(!confirm('削除しますか？')) return;
   recs = recs.filter(r=>r.id!==id); sv(KR,recs); renderHist();
 }
 
@@ -1439,43 +1439,43 @@ function chM(t,d) {
 }
 function updMons() { $('h-mon').textContent=fYM(hYM.y,hYM.m); $('e-mon').textContent=fYM(eYM.y,eYM.m); }
 
-// ââ CSV ââ
+// ── CSV ──
 function doCSV() {
   const rs = getMRecs(eYM.y, eYM.m);
-  if(!rs.length){alert('ãã®æã®è¨é²ãããã¾ãã');return;}
-  const h = ['æ¥ä»','è»ä¸¡','ALç¢ºèª','ALæå»','å©ç¨èå','åºçºå°','å°çå°',
-    'åºåº«è·é¢(km)','å¥åº«è·é¢(km)','åºçºæå»','å°çæå»',
-    'èµ°è¡è·é¢(km)','åä¹è','ç¦ç¥ç¨å·','å»çã±ã¢','åè¨éé¡(å)','æ¦ç®éé¡_ä¸é(å)','æ¦ç®éé¡_ä¸é(å)','è¨ªåç®ç','åè'];
+  if(!rs.length){alert('この月の記録がありません');return;}
+  const h = ['日付','車両','AL確認','AL時刻','利用者名','出発地','到着地',
+    '出庫距離(km)','入庫距離(km)','出発時刻','到着時刻',
+    '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額_下限(円)','概算金額_上限(円)','訪問目的','備考'];
   const rows = rs.map(r=>[
-    r.date,'è»ä¸¡'+r.vehicle,r.alcohol==='ok'?'åæ ¼':'è¦æ³¨æ',r.alTime||'',
+    r.date,'車両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
     r.user||'',r.from||'',r.to||'',
     r.odoOut||0,r.odoIn||0,r.t3||'',r.t4||'',
-    r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('ã»'),r.medical||'',
+    r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・'),r.medical||'',
     r.total||0,r.estimateLo||r.estimate||0,r.estimateHi||0,r.purpose||'',r.notes||''
   ]);
   const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`æ¬éæ¥å ±_${eYM.y}å¹´${pad(eYM.m)}æ.csv`;
+  a.download=`搬送日報_${eYM.y}年${pad(eYM.m)}月.csv`;
   a.click();
 }
 
-// ââ Print ââ
+// ── Print ──
 function doPrint() {
   const rs = getMRecs(eYM.y, eYM.m);
-  if(!rs.length){alert('ãã®æã®è¨é²ãããã¾ãã');return;}
-  $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}ãåºåæ¥ï¼${fDateL(today())}`;
+  if(!rs.length){alert('この月の記録がありません');return;}
+  $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}　出力日：${fDateL(today())}`;
   const km=rs.reduce((s,r)=>s+(r.dist||0),0);
   const rev=rs.reduce((s,r)=>s+(r.total||0),0);
   $('pv-km').textContent=km.toFixed(1); $('pv-rev').textContent=fN(rev);
   $('pv-body').innerHTML=rs.map(r=>`<tr>
-    <td>${r.date}</td><td style="text-align:center">è»${r.vehicle}</td>
-    <td style="text-align:center">${r.alcohol==='ok'?'â':'Ã'} ${r.alTime||''}</td>
+    <td>${r.date}</td><td style="text-align:center">車${r.vehicle}</td>
+    <td style="text-align:center">${r.alcohol==='ok'?'○':'×'} ${r.alTime||''}</td>
     <td>${esc(r.user)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td>
     <td style="text-align:center">${r.odoOut||''}</td><td style="text-align:center">${r.odoIn||''}</td>
     <td style="text-align:center">${r.t3||''}</td><td style="text-align:center">${r.t4||''}</td>
     <td style="text-align:center">${r.dist||0}</td>
-    <td>${esc(r.comp)}</td><td>${normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('ã»')}</td>
+    <td>${esc(r.comp)}</td><td>${normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・')}</td>
     <td>${esc(r.medical)}</td>
     <td style="text-align:right">${fN(r.total||0)}</td>
     <td style="text-align:right">${fEst(r)}</td>
@@ -1484,8 +1484,8 @@ function doPrint() {
   window.print();
 }
 
-// ââ Toast ââ
-// ââ Backup / Restore ââ
+// ── Toast ──
+// ── Backup / Restore ──
     
     // ── 地点マスター管理 ──
     function loadLocations() {
