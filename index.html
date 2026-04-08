@@ -1311,7 +1311,8 @@ function openTMod(id) {
     $('t-from').value    = t.from    || '';
     $('t-to').value      = t.to      || '';
     $('t-purpose').value = t.purpose || '';
-    $('t-est').value     = t.estimate|| '';
+    $('t-est-lo').value = t.estimateLo || t.estimate || '';
+      $('t-est-hi').value = t.estimateHi || '';
     $('t-comp').value    = t.comp    || '';
     $('t-notes').value   = t.notes   || '';
     normEq(t.equipment||[]).forEach(e => tEq.push(e));
