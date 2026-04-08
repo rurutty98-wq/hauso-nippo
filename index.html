@@ -554,20 +554,6 @@
         <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">機種変更や万が一に備えて、定期的にバックアップをおすすめします</div>
       </div>
 <div class="card">
-    <div class="card-title">📍 地点マスター</div>
-    <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <input type="text" id="loc-name" class="inp" placeholder="地点名（例：〇〇病院）" style="flex:1;">
-      <select id="loc-type" class="inp" style="width:auto;min-width:80px;">
-        <option value="both">両方</option>
-        <option value="from">出発地</option>
-        <option value="to">到着地</option>
-      </select>
-    </div>
-    <button class="btn-full btn-green" onclick="addLocation()">➕ 地点を登録</button>
-    <div id="loc-list" style="margin-top:8px;max-height:200px;overflow-y:auto;"></div>
-    <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">登録した地点は出発地・到着地の入力時に候補として表示されます</div>
-  </div>
-<div class="card">
     <div class="card-title">使い方</div>
     <p style="font-size:12px; color:#64748b; line-height:1.9;">
       <b>① テンプレートにルートを登録</b>（前日まで）<br>
@@ -656,9 +642,8 @@
 const EQ = ['車いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
 const KR = 'kt_rec_v3';
 const KT = 'kt_tpl_v3';
-const KL = 'kt_locations_v1';
 
-let recs = [], tpls = [], locations = [];
+let recs = [], tpls = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
 let curV = '1', curAL = 'ok', curDir = '→';
@@ -1030,8 +1015,6 @@ function init() {
   renderDayUserCards();
   initCal();
   restoreMorning();
-    loadLocations();
-    renderLocations();
       // ブラウザ自動復元対策：遅延で入庫距離を再チェック
       setTimeout(function() {
         var m = localStorage.getItem('kt_morning_v1');
@@ -1125,10 +1108,8 @@ function renderChips(cid, arr, otherId) {
 function refreshDrop() { refreshDataLists(); }  // 後方互換
 
 function refreshDataLists() {
-  const locFroms = locations.filter(l=>l.type!=='to').map(l=>l.name);
-  const froms    = [...new Set([...locFroms, ...tpls.map(t=>t.from).filter(Boolean)])];
-  const locTos   = locations.filter(l=>l.type!=='from').map(l=>l.name);
-  const tos      = [...new Set([...locTos, ...tpls.map(t=>t.to).filter(Boolean)])];
+  const froms    = [...new Set(tpls.map(t=>t.from).filter(Boolean))];
+  const tos      = [...new Set(tpls.map(t=>t.to).filter(Boolean))];
   const comps    = [...new Set(tpls.map(t=>t.comp).filter(Boolean))];
   const purposes = [...new Set(tpls.map(t=>t.purpose).filter(Boolean))];
   const fill = (id, arr) => {
@@ -1486,52 +1467,7 @@ function doPrint() {
 
 // ── Toast ──
 // ── Backup / Restore ──
-    
-    // ── 地点マスター管理 ──
-    function loadLocations() {
-      try { locations = JSON.parse(localStorage.getItem(KL)) || []; } catch(e) { locations = []; }
-    }
-    function saveLocations() {
-      localStorage.setItem(KL, JSON.stringify(locations));
-      refreshDataLists();
-      renderLocations();
-    }
-    function addLocation() {
-      var name = $('loc-name').value.trim();
-      if (!name) { toast('地点名を入力してください'); return; }
-      var type = $('loc-type').value;
-      if (locations.some(function(l) { return l.name === name && l.type === type; })) {
-        toast('同じ地点が既に登録されています'); return;
-      }
-      locations.push({name: name, type: type, id: Date.now()});
-      saveLocations();
-      $('loc-name').value = '';
-      toast('📍 「' + name + '」を登録しました');
-    }
-    function removeLocation(id) {
-      locations = locations.filter(function(l) { return l.id !== id; });
-      saveLocations();
-      toast('地点を削除しました');
-    }
-    function renderLocations() {
-      var el = $('loc-list');
-      if (!el) return;
-      if (locations.length === 0) {
-        el.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:12px;padding:8px;">登録された地点はありません</div>';
-        return;
-      }
-      var html = '';
-      locations.forEach(function(l) {
-        var typeLabel = l.type === 'both' ? '両方' : l.type === 'from' ? '出発地のみ' : '到着地のみ';
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1e293b;">';
-        html += '<div><span style="font-weight:600;">' + l.name + '</span> <span style="font-size:11px;color:#94a3b8;">('+ typeLabel + ')</span></div>';
-        html += '<button onclick="removeLocation(' + l.id + ')" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;">削除</button>';
-        html += '</div>';
-      });
-      el.innerHTML = html;
-    }
-
-function doBackup() {
+    function doBackup() {
       var data = {
         version: 3,
         date: new Date().toISOString(),
@@ -1539,8 +1475,7 @@ function doBackup() {
         templates: load(KT),
         morning: localStorage.getItem('kt_morning_v1'),
         odo1: localStorage.getItem('kt_odo_1'),
-        odo2: localStorage.getItem('kt_odo_2'),
-        locations: locations
+        odo2: localStorage.getItem('kt_odo_2')
       };
       var json = JSON.stringify(data, null, 2);
       var blob = new Blob([json], {type: 'application/json'});
@@ -1571,7 +1506,6 @@ function doBackup() {
           if (data.morning) localStorage.setItem('kt_morning_v1', data.morning);
           if (data.odo1) localStorage.setItem('kt_odo_1', data.odo1);
           if (data.odo2) localStorage.setItem('kt_odo_2', data.odo2);
-           if (data.locations) { localStorage.setItem(KL, JSON.stringify(data.locations)); locations = data.locations; }
           recs = load(KR); tpls = load(KT);
           renderTpls(); renderHist(); renderDayUserCards(); refreshDataLists();
           toast('\u{1F4E4} \u5FA9\u5143\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\uFF08' + (data.records||[]).length + '\u4EF6\u306E\u8A18\u9332\u3001' + (data.templates||[]).length + '\u4EF6\u306E\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8\uFF09');
