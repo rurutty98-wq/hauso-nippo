@@ -320,7 +320,7 @@
 
 <!-- ============================================================
      PAGE: 記録入力
-     ============================================================ -->
+     ================================================================================================ -->
 <div id="page-record" class="page active">
   <div class="page-title">🚗 搬送日報</div>
 
@@ -360,7 +360,7 @@
     </div>
     <div class="g2">
       <div>
-        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">🚗 出庫時刻</div>
+        <div style="or:#64748b; margin-bottom:4px;">🚗 出庫時刻</div>
         <div class="time-sel-wrap" style="justify-content:center;">
           <select id="r-t-out-h" class="time-sel" style="width:62px;"></select>
           <span class="tsep">:</span>
@@ -451,7 +451,7 @@
       <div class="row">
         <label class="lbl">福祉用具</label>
         <div class="chips" id="r-eq-chips"></div>
-        <input type="text" id="s-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
+        <input type="text" id="r-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
       </div>
       <div class="row">
         <label class="lbl">訪問目的</label>
@@ -575,7 +575,7 @@
       　出発地・到着地・福祉用具・訪問目的・概算金額<br>
       <b>② 記録入力でテンプレートを選ぶ</b><br>
       　利用者名を入力 → 時刻・距離・合計金額を記録<br>
-      <b>③ 月末に出力</b>� CSV or 印刷
+      <b>③ 月末に出力</b>　CSV or 印刷
     </p>
   </div>
 </div>
@@ -654,7 +654,7 @@
      JAVASCRIPT
      ============================================================ -->
 <script>
-const EQ = ['車いす', 'ストレッチャー', 'リタライニング', '歩行', 'その他'];
+const EQ = ['車いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
 const KR = 'kt_rec_v3';
 const KT = 'kt_tpl_v3';
 const KS = 'kt_hist_sort'; // ▼ 追加：表示順の保存キー
@@ -678,7 +678,7 @@ const fN = n => Number(n||0).toLocaleString('ja-JP');
 function today() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function nowT()   { const d=new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
 function fDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${parseInt(m)}/${parseInt(d)}`; }
-function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}年${parseInt(m)}月${parseInt(d)}日`; }
+function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}�T${parseInt(m)}月${parseInt(d)}日`; }
 function fYM(y,m) { return `${y}年${m}月`; }
 function fEst(r) {
   var lo = r.estimateLo || r.estimate || 0, hi = r.estimateHi || 0;
@@ -1036,7 +1036,7 @@ function applyTemplate(id) {
   if (t.notes) $('r-notes').value = t.notes;
   rEq.length = 0;
   normEq(t.equipment || []).forEach(function(e){ rEq.push(e); });
-  renderChips('r_eq-chips', rEq, 'r-eq-other');
+  renderChips('r-eq-chips', rEq, 'r-eq-other');
 }
 
 function init() {
@@ -1046,7 +1046,7 @@ function init() {
   eYM = { y: now.getFullYear(), m: now.getMonth()+1 };
   buildTimeSelects();
   $('r-date').value = today();
-  renderChips('r_eq-chips', rEq, 'r-eq-other');
+  renderChips('r-eq-chips', rEq, 'r-eq-other');
   renderChips('t-eq-chips', tEq, 't-eq-other');
   refreshDataLists();
   renderTpls();
@@ -1177,7 +1177,7 @@ function autoFill() {
   if (!$('r-notes').value && t.notes) $('r-notes').value = t.notes;
   if (rEq.length === 0 && (t.equipment||[]).length) {
     normEq(t.equipment).forEach(e => rEq.push(e));
-    renderChips('r_eq-chips', rEq, 'r-eq-other');
+    renderChips('r-eq-chips', rEq, 'r-eq-other');
   }
 }
 
@@ -1535,28 +1535,17 @@ function doPrint() {
       toast('\u{1F4E5} \u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3092\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u307E\u3057\u305F');
     }
     function doRestore() {
-      if (!confirm('\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30D5\u30A1\u30A4\u30EB\u304B\u3089\u5FC�MLM�L�
-M�L�
-�WL�
-NWL���M�ёWMM̎L�
-�WL���L���L���L�
-��MLWM���L�
-L�
-MWL��L�
-�WL�
-NWL��L�L�L�
-M�L�
-
-L�
-��L�
-NWL�
-�Q��Q��JH�]\��	
-	ܙ\�ܙKY�[I�K��X��
-NB��[��[ۈ[�T�\�ܙJ[�]
-H�\��[HH[�]��[\��NY�
-Y�[JH�]\���\��XY\�H�]��[T�XY\�
-N�XY\��ۛ�YH�[��[ۊJH�H�\�]HH��Ӌ�\��JK�\��]��\�[
-NYf (!data.records && !data.templates) {
+      if (!confirm('\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30D5\u30A1\u30A4\u30EB\u304B\u3089\u5FA9\u5143\u3057\u307E\u3059\u3002\n\u73FE\u5728\u306E\u30C7\u30FC\u30BF\u306F\u4E0A\u66F8\u304D\u3055\u308C\u307E\u3059\u3002\u3088\u308D\u3057\u3044\u3067\u3059\u304B\uFF1F')) return;
+      $('restore-file').click();
+    }
+    function handleRestore(input) {
+      var file = input.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var data = JSON.parse(e.target.result);
+          if (!data.records && !data.templates) {
             alert('\u6B63\u3057\u3044\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30D5\u30A1\u30A4\u30EB\u3067\u306F\u3042\u308A\u307E\u305B\u3093');
             return;
           }
