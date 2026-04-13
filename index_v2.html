@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>介護タクシー 搬送日報</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="搬送日報">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: #f0f4f8; color: #1a202c; -webkit-text-size-adjust: 100%;
+    }
+
+    /* ── Nav ── */
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+      background: white; border-top: 1px solid #e2e8f0; display: flex; z-index: 100;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; border: none; background: none; cursor: pointer; color: #94a3b8;
+      font-size: 10px; font-weight: 600; -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item.active { color: #2563eb; }
+    .nav-item svg { width: 21px; height: 21px; }
+
+    /* ── Pages ── */
+    .page { display: none; padding: 12px; padding-bottom: 76px; max-width: 520px; margin: 0 auto; }
+    .page.active { display: block; }
+    .page-title { font-size: 19px; font-weight: 800; color: #1e3a5f; margin-bottom: 12px; padding-top: 8px; }
+
+    /* ── Card ── */
+    .card { background: white; border-radius: 14px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .card-title { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+
+    /* ── Form ── */
+    .row { margin-bottom: 11px; }
+    .row:last-child { margin-bottom: 0; }
+    .lbl { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 4px; }
+    .inp {
+      width: 100%; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: 16px; background: #f8fafc; color: #1a202c; font-family: inherit;
+    }
+    .inp:focus { outline: none; border-color: #3b82f6; background: white; }
+    select.inp {
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 32px;
+    }
+    .inp.big {
+      border-color: #2563eb; background: #eff6ff;
+      font-size: 22px; font-weight: 800; text-align: center; padding: 13px 6px;
+    }
+    .inp.big:focus { background: #dbeafe; }
+    .inp.big::placeholder { font-size: 15px; font-weight: 400; color: #93c5fd; }
+    .inp.est {
+      border-color: #d1d5db; background: #f9fafb;
+      font-size: 15px; font-weight: 600; text-align: center; color: #6b7280;
+    }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+    /* ── Toggle ── */
+    .tog-g { display: flex; gap: 6px; }
+    .tog {
+      flex: 1; padding: 8px 4px; border: 1.5px solid #e2e8f0; border-radius: 9px;
+      background: white; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center;
+      color: #64748b; -webkit-tap-highlight-color: transparent;
+    }
+    .tog.s-bl { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .tog.s-gr { border-color: #059669; background: #ecfdf5; color: #059669; }
+    .tog.s-rd { border-color: #dc2626; background: #fef2f2; color: #dc2626; }
+
+    /* ── Chips ── */
+    .chips { display: flex; flew-wrap: wrap; gap: 6px; }
+    .chip {
+      padding: 6px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      font-size: 13px; cursor: pointer; background: white; color: #475569; font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip.sel  { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .chip.own  { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .chip.rent { border-color: #d97706; background: #fffbeb; color: #d97706; }
+    .eq-bdg { display: inline-block; font-size: 9px; padding: 1px 4px; border-radius: 3px;
+              margin-left: 3px; background: rgba(255,255,255,0.65); font-weight: 700; vertical-align: middle; }
+
+    /* ── Route preview ── */
+    .route-card {
+      background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 12px;
+      padding: 11px 13px; margin-top: 8px;
+    }
+    .route-card .rc-route { font-size: 14px; font-weight: 700; color: #1e40af; }
+    .route-card .rc-tags  { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+
+    /* ── Buttons ── */
+    .btn-save {
+      width: 100%; padding: 16px; background: #2563eb; color: white; border: none;
+      border-radius: 14px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 6px;
+    }
+    .btn-save:active { background: #1d4ed8; }
+    .btn-full { width: 100%; padding: 13px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 8px; }
+    .btn-blue  { background: #2563eb; color: white; }
+    .btn-green { background: #059669; color: white; }
+    .btn-gray  { background: #f1f5f9; color: #475569; }
+    .btn-sm { padding: 6px 11px; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-e { background: #e0f2fe; color: #0369a1; }
+    .btn-d { background: #fee2e2; color: #dc2626; }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed; right: 16px; bottom: 72px; width: 52px; height: 52px;
+      border-radius: 50%; background: #2563eb; color: white; border: none;
+      font-size: 28px; cursor: pointer; z-index: 50;
+      box-shadow: 0 4px 14px rgba(37,99,235,.4);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Badges ── */
+    .bdg { display: inline-flex; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .b-bl { background: #dbeafe; color: #1d4ed8; }
+    .b-gr { background: #d1fae5; color: #065f46; }
+    .b-rd { background: #fee2e2; color: #b91c1c; }
+    .b-gy { background: #f1f5f9; color: #475569; }
+    .b-ye { background: #fef9c3; color: #713f12; }
+    .b-or { background: #ffedd5; color: #9a3412; }
+
+    /* ── List ── */
+    .li { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.07); cursor: pointer; }
+    .li-hd { display: flex; justify-content: space-between; align-items: flex-start; }
+    .li-name { font-weight: 700; color: #1e40af; font-size: 14px; }
+    .li-sub  { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .li-meta { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+    .li-acts { display: flex; gap: 6px; margin-top: 8px; }
+
+    .det { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+    .det.open { display: block; }
+    .dr { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; border-bottom: 1px solid #f8fafc; }
+    .dr:last-child { border: none; }
+    .dk { color: #94a3b8; }
+    .dv { color: #1a202c; font-weight: 500; text-align: right; max-width: 60%; }
+
+    /* ── Summary ── */
+    .sg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .si { text-align: center; padding: 9px 4px; background: #f8fafc; border-radius: 10px; }
+    .sv { font-size: 17px; font-weight: 800; color: #1e3a5f; }
+    .sl { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+
+    /* ── Month nav ── */
+    .mn-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .mn-disp { font-size: 17px; font-weight: 800; color: #1e3a5f; }
+    .mn-btn { padding: 7px 14px; border: none; background: white; border-radius: 8px; font-size: 15px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+    /* ── Sort button ── */
+    .sort-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+    .sort-btn {
+      padding: 7px 14px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      background: white; font-size: 13px; font-weight: 600; cursor: pointer;
+      color: #64748b; -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .sort-btn.desc { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .sort-btn.asc  { border-color: #7c3aed; background: #f5f3ff; color: #7c3aed; }
+
+    /* ── Modal ── */
+    .modal-bg {
+      display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
+      z-index: 200; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    }
+    .modal-bg.open { display: flex; align-items: flex-end; }
+    .modal-sh {
+      background: white; border-radius: 22px 22px 0 0; padding: 18px 14px; width: 100%;
+      max-height: 92vh; overflow-y: auto;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0));
+    }
+    .mh { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 14px; }
+    .mt { font-size: 17px; font-weight: 800; color: #1e3a5f; margin-bottom: 14px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-80px);
+      background: #1e3a5f; color: white; padding: 10px 20px; border-radius: 10px;
+      font-size: 14px; font-weight: 600; z-index: 300; transition: transform .3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Empty ── */
+    .empty { text-align: center; padding: 44px 16px; color: #94a3b8; }
+    .empty-i { font-size: 46px; margin-bottom: 10px; }
+    .empty-t { font-size: 13px; }
+
+    /* ── Section label ── */
+    .sec-lbl { font-size: 11px; font-weight: 700; color: #2563eb; text-align: center; margin-bottom: 8px; letter-spacing: .06em; }
+
+    /* ── Vehicle mini ── */
+    .vm { display: flex; gap: 4px; }
+    .vm button {
+      padding: 5px 11px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      background: white; font-size: 12px; font-weight: 700; cursor: pointer; color: #94a3b8;
+    }
+    .vm button.sel { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+
+    /* ── AL row ── */
+    .al-row { display: flex; align-items: center; gap: 8px; }
+    .al-row .tog-g { flex: 1; }
+    .time-sel-wrap { display:flex; align-items:center; gap:4px; }
+    .time-sel-wrap .tsep { font-weight:700; font-size:18px; color:#475569; }
+    .time-sel { border:1.5px solid #e2e8f0; border-radius:9px; font-size:15px; padding:8px 4px; background:#f8fafc; color:#1e293b; text-align:center; -webkit-appearance:none; appearance:none; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1.5px dashed #bfdbfe; margin: 10px 0; }
+
+    /* ── Amount row ── */
+    .amt-label { font-size: 11px; font-weight: 700; color: #64748b; text-align: center; margin-bottom: 4px; }
+    .amt-note { font-size: 10px; color: #94a3b8; text-align: center; margin-top: 3px; }
+
+    /* ── Morning banner ── */
+    .morning-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #ecfdf5; border: 1.5px solid #6ee7b7; border-radius: 12px;
+      padding: 10px 14px; margin-bottom: 10px;
+    }
+    .mb-summary { font-size: 12px; font-weight: 700; color: #065f46; flex: 1; line-height: 1.5; }
+    .mb-open {
+      padding: 5px 12px; border: none; border-radius: 8px;
+      background: #d1fae5; color: #065f46; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── User card ── */
+    .user-card {
+      display: flex; align-items: center; gap: 10px;
+      background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .uc-time { font-size: 15px; font-weight: 800; color: #2563eb; min-width: 42px; flex-shrink: 0; }
+    .uc-info { flex: 1; min-width: 0; }
+    .uc-name { font-size: 14px; font-weight: 700; color: #1e293b; white-space: nowraz; overflow: hidden; text-overflow: ellipsis; }
+    .uc-route { font-size: 11px; color: #64748b; margin-top: 2px; white-space: nowraz; overflow: hidden; text-overflow: ellipsis; }
+    .uc-edit {
+      padding: 6px 10px; border: none; border-radius: 8px;
+      background: #eff6ff; color: #2563eb; font-size: 16px; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── Add user button ── */
+    .btn-add-user {
+      width: 100%; padding: 14px; border: 2px dashed #93c5fd;
+      border-radius: 12px; background: #f0f9ff; color: #2563eb;
+      font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-add-user:active { background: #dbeafe; }
+
+    /* ── Template chips ── */
+    .tpl-chip {
+      padding: 7px 14px; border: 1.5px solid #bfdbfe; border-radius: 20px;
+      background: #eff6ff; color: #1d4ed8; font-size: 13px; font-weight: 600;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+    .tpl-chip.sel { border-color: #2563eb; background: #2563eb; color: white; }
+
+    /* ── Print ── */
+    #pv { display: none; }
+    @media print {
+      body { background: white !important; font-size: 10px; }
+      .nav-bar, .fab, .page, .toast, .modal-bg { display: none !important; }
+      #pv { display: block !important; }
+      #pv .ph { text-align: center; margin-bottom: 12px; }
+      #pv .pt { font-size: 16px; font-weight: 800; }
+      #pv .ps { font-size: 11px; color: #555; margin-top: 3px; }
+      #pv table { width: 100%; border-collapse: collapse; }
+      #pv th {
+        background: #1e3a5f !important; color: white !important; padding: 5px 4px;
+        font-size: 9px; text-align: center;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      #pv td { border: 1px solid #ccc; padding: 4px; font-size: 9px; vertical-align: top; }
+      #pv tr:nth-child(even) td {
+        background: #f9fafb !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      #pv tfoot td { font-weight: 700; border-top: 2px solid #1e3a5f; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ===== PRINT VIEW ===== -->
+<div id="pv">
+  <div class="ph">
+    <div class="pt">搬送日報（介護タクシー）</div>
+    <div id="pv-sub" class="ps"></div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>日付</th><th>車両</th><th>AL</th>
+        <th>利用者</th><th>出発地</th><th>到着地</th>
+        <th>出庫km</th><th>入庫km</th><th>出発</th><th>到着</th>
+        <th>km</th><th>同乗者</th><th>福祉用具</th>
+        <th>医療ケア</th><th>合計(円)</th><th>概算(円)</th><th>備考</th>
+      </tr>
+    </thead>
+    <tbody id="pv-body"></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="9" style="text-align:right;">合計</td>
+        <td id="pv-km" style="text-align:center;"></td>
+        <td colspan="3"></td>
+        <td id="pv-rev" style="text-align:center;"></td>
+        <td colspan="2"></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- ============================================================
+     PAGE: 記録入力
+     ============================================================ -->
+<div id="page-record" class="page active">
+  <div class="page-title">🚗 搬送日報</div>
+
+  <!-- 日付 + 車両 -->
+  <div class="card">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <input type="date" id="r-date" class="inp" style="flex:1; font-size:15px; padding:9px 10px;" onchange="onDateChange()">
+      <div class="vm">
+        <button class="sel" data-v="1" onclick="pickV(this)">①</button>
+        <button data-v="2" onclick="pickV(this)">②</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ☀️ 朝の記録（1日1回） -->
+  <div id="morning-card" class="card" style="border:1.5px solid #93c5fd;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <span style="font-size:13px; font-weight:700; color:#1e40af;">☀️ 朝の記録（1日1回）</span>
+      <button class="mb-open" onclick="completeMorning()">✅ 完了にする</button>
+    </div>
+    <div class="al-row" style="margin-bottom:10px;">
+      <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowraz;">🍶 AL確認</span>
+      <div class="tog-g" id="al-g">
+        <button class="tog s-gr" data-v="ok" onclick="setTog('al-g','s-gr',this)" style="font-size:12px; padding:7px 4px;">✅ 合格</button>
+        <button class="tog" data-v="ng" onclick="setTog('al-g','s-rd',this)" style="font-size:12px; padding:7px 4px;">⚠️ 注意</button>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:8px;">
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">出庫距離 (km)</div>
+        <input type="number" id="r-odo-out" autocomplete="off" class="inp" placeholder="0.0" step="0.1" min="0" inputmode="decimal" style="text-align:center;">
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">入庫距離 (km)</div>
+        <input type="number" id="r-odo-in" autocomplete="off" name="odo_arrival_nocache" class="inp" placeholder="0.0" step="0.1" min="0" inputmode="decimal" style="text-align:center;">
+      </div>
+    </div>
+    <div class="g2">
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">🚗 出庫時刻</div>
+        <div class="time-sel-wrap" style="justify-content:center;">
+          <select id="r-t-out-h" class="time-sel" style="width:62px;"></select>
+          <span class="tsep">:</span>
+          <select id="r-t-out-m" class="time-sel" style="width:62px;"></select>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">🏠 入庫時刻</div>
+        <div class="time-sel-wrap" style="justify-content:center;">
+          <select id="r-t-in-h" class="time-sel" style="width:62px;"></select>
+          <span class="tsep">:</span>
+          <select id="r-t-in-m" class="time-sel" style="width:62px;"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 朝の記録バナー（完了後に表示） -->
+  <div id="morning-banner" class="morning-banner" style="display:none;">
+    <div id="morning-summary" class="mb-summary"></div>
+    <button class="mb-open" onclick="openMorning()">修正する</button>
+  </div>
+
+  <!-- 当日の利用者一覧 -->
+  <div id="day-users-section">
+    <div id="day-users-list"></div>
+    <button class="btn-add-user" id="btn-add-user" onclick="showUserForm()">＋ 利用者を追加</button>
+  </div>
+
+  <!-- 利用者入力フォーム（初期は非表示） -->
+  <div id="user-form-section" style="display:none;">
+
+    <!-- テンプレート選択 -->
+    <div class="card" id="tpl-picker-card" style="display:none;">
+      <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:8px;">📋 テンプレートから選択</div>
+      <div id="tpl-picker-list" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+    </div>
+
+    <!-- 利用者名 + 時刻 -->
+    <div class="card">
+      <div class="row">
+        <label class="lbl">👤 利用者名</label>
+        <input type="text" id="r-user" class="inp" placeholder="例：ヤマダ ルルン" style="font-size:16px; font-weight:600;">
+      </div>
+      <div class="g2" style="margin-top:10px;">
+        <div>
+          <div style="font-size:11px; font-weight:700; color:#dc2626; text-align:center; margin-bottom:4px;">🔴 出発時刻</div>
+          <div class="time-sel-wrap" style="justify-content:center;">
+            <select id="r-t3-h" class="time-sel" style="width:66px;border-color:#f59e0b;background:#fffbeb;font-weight:700;font-size:16px;"></select>
+            <span class="tsep">:</span>
+            <select id="r-t3-m" class="time-sel" style="width:66px;border-color:#f59e0b;background:#fffbeb;font-weight:700;font-size:16px;"></select>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px; font-weight:700; color:#2563eb; text-align:center; margin-bottom:4px;">⭐ 到着時刻</div>
+          <div class="time-sel-wrap" style="justify-content:center;">
+            <select id="r-t4-h" class="time-sel" style="width:66px;font-size:16px;"></select>
+            <span class="tsep">:</span>
+            <select id="r-t4-m" class="time-sel" style="width:66px;font-size:16px;"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ルート・福祉用具 -->
+    <div class="card">
+      <datalist id="dl-from"></datalist>
+      <datalist id="dl-to"></datalist>
+      <datalist id="dl-purpose"></datalist>
+      <div class="g2">
+        <div class="row">
+          <label class="lbl">📍 出発地</label>
+          <input type="text" id="r-from" class="inp" list="dl-from" placeholder="出発地を入力・選択" autocomplete="off" oninput="autoFill()">
+        </div>
+        <div class="row">
+          <label class="lbl">🏁 到着地</label>
+          <input type="text" id="r-to" class="inp" list="dl-to" placeholder="到着地を入力・選択" autocomplete="off">
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <label class="lbl">方向</label>
+        <div class="tog-g" id="dir-g">
+          <button class="tog s-bl" data-v="→" onclick="setTog('dir-g','s-bl',this)">→　片道</button>
+          <button class="tog" data-v="⇔" onclick="setTog('dir-g','s-bl',this)">⇔　往復</button>
+          <button class="tog" data-v="～" onclick="setTog('dir-g','s-bl',this)">～　その他</button>
+        </div>
+      </div>
+      <div class="row">
+        <label class="lbl">福祉用具</label>
+        <div class="chips" id="r-eq-chips"></div>
+        <input type="text" id="s-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
+      </div>
+      <div class="row">
+        <label class="lbl">訪問目的</label>
+        <input type="text" id="r-purpose" class="inp" list="dl-purpose" placeholder="入力または選択" autocomplete="off">
+      </div>
+      <div class="row">
+        <label class="lbl">概算金額（目安）</label>
+        <div class="g2">
+          <input type="number" id="r-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="r-est-hi" class="inp est" placeholder="上限 ¥">
+        </div>
+      </div>
+    </div>
+
+    <!-- 走行距離・金額・詳細 -->
+    <div class="card" style="border: 2px solid #2563eb;">
+      <div class="g2">
+        <div class="row">
+          <div class="amt-label">走行距離 (km)</div>
+          <input type="number" id="r-dist" class="inp big" placeholder="km" step="0.1" min="0" inputmode="decimal">
+        </div>
+        <div class="row">
+          <div class="amt-label" style="color:#059669; font-weight:800;">⭐ 合計金額 (円)</div>
+          <input type="number" id="r-total" class="inp big" placeholder="¥" min="0" inputmode="numeric" style="border-color:#059669; background:#ecfdf5;">
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="row">
+        <datalist id="dl-comp"></datalist>
+        <label class="lbl">同乗者</label>
+        <input type="text" id="r-comp" class="inp" list="dl-comp" placeholder="入力または選択" autocomplete="off">
+      </div>
+      <div class="row">
+        <label class="lbl">医療ケア</label>
+        <input type="text" id="r-med" class="inp" placeholder="例：回復期案件、なし">
+      </div>
+      <div class="row">
+        <label class="lbl">備考</label>
+        <input type="text" id="r-notes" class="inp" placeholder="特記事項">
+      </div>
+    </div>
+
+    <div style="position:sticky; bottom:70px; z-index:80; padding: 0 0 6px 0;">
+      <button id="btn-save-main" class="btn-save" onclick="saveRec()">💾 保存する</button>
+      <button id="btn-cancel-edit" class="btn-full btn-gray" onclick="cancelEdit()" style="margin-top:6px;">✕ キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: テンプレート
+     ============================================================ -->
+<div id="page-template" class="page">
+  <div class="page-title">📋 テンプレート</div>
+  <p style="color:#64748b; font-size:12px; margin-bottom:12px; line-height:1.7;">
+    ルート（出発地・到着地）・福祉用具・目的・概算金額を登録。<br>
+    記録入力で選ぶだけで自動入力されます。
+  </p>
+  <div id="tpl-list"></div>
+  <button class="fab" onclick="openTMod(null)">＋</button>
+</div>
+
+<!-- ============================================================
+     PAGE: 履歴
+     ============================================================ -->
+<div id="page-history" class="page">
+  <div class="page-title">📂 履歴</div>
+  <div class="mn-nav">
+    <button class="mn-btn" onclick="chM('h',-1)">◀</button>
+    <div class="mn-disp" id="h-mon"></div>
+    <button class="mn-btn" onclick="chM('h',1)">▶</button>
+  </div>
+  <!-- ▼ 表示順切り替えボタン（新規追加） -->
+  <div class="sort-bar">
+    <button id="sort-btn" class="sort-btn desc" onclick="toggleHistSort()">↓ 新しい順</button>
+  </div>
+  <div class="card" id="h-sum"></div>
+  <div id="h-list"></div>
+</div>
+
+<!-- ============================================================
+     PAGE: 出力
+     ============================================================ -->
+<div id="page-calendar" class="page">
+  <div class="page-title">📅 カレンダー</div>
+  <div id="cal-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <button onclick="calMove(-1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">‹</button>
+    <span id="cal-title" style="font-weight:700;font-size:16px;color:#1e293b;"></span>
+    <button onclick="calMove(1)" style="background:#e2e8f0;border:none;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;">›</button>
+  </div>
+  <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>
+  <div id="cal-detail" style="margin-top:14px;display:none;">
+    <div id="cal-detail-title" style="font-weight:700;font-size:14px;color:#2563eb;margin-bottom:8px;"></div>
+    <div id="cal-detail-list"></div>
+  </div>
+</div>
+
+<div id="page-export" class="page">
+  <div class="page-title">📤 出力</div>
+  <div class="mn-nav">
+    <button class="mn-btn" onclick="chM('e',-1)">◀</button>
+    <div class="mn-disp" id="e-mon"></div>
+    <button class="mn-btn" onclick="chM('e',1)">▶</button>
+  </div>
+  <div class="card">
+    <button class="btn-full btn-green" onclick="doCSV()">📊 CSV ダウンロード（Excel用）</button>
+    <button class="btn-full btn-blue" onclick="doPrint()">🖨 印刷（運輸局提出用）</button>
+  </div>
+
+      <div class="card">
+        <div class="card-title">💾 データ管理</div>
+        <button class="btn-full btn-green" onclick="doBackup()">📥 バックアップ（ダウンロード）</button>
+        <button class="btn-full btn-blue" onclick="doRestore()">📤 復元（ファイルを選択）</button>
+        <input type="file" id="restore-file" accept=".json" style="display:none" onchange="handleRestore(this)">
+        <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">機種変更や万が一に備えて、定期的にバックアップをおすすめします</div>
+      </div>
+<div class="card">
+    <div class="card-title">使い方</div>
+    <p style="font-size:12px; color:#64748b; line-height:1.9;">
+      <b>① テンプレートにルートを登録</b>（前日まで）<br>
+      　出発地・到着地・福祉用具・訪問目的・概算金額<br>
+      <b>② 記録入力でテンプレートを選ぶ</b><br>
+      　利用者名を入力 → 時刻・距離・合計金額を記録<br>
+      <b>③ 月末に出力</b>� CSV or 印刷
+    </p>
+  </div>
+</div>
+
+<!-- ===== Bottom Nav ===== -->
+<nav class="nav-bar">
+  <button class="nav-item active" id="nav-record" onclick="showPage('record')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+    記録入力
+  </button>
+  <button class="nav-item" id="nav-template" onclick="showPage('template')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    テンプレート
+  </button>
+  <button class="nav-item" id="nav-history" onclick="showPage('history')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    履歴
+  </button>
+  <button class="nav-item" id="nav-export" onclick="showPage('export')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    出力
+  </button>
+<button class="nav-item" id="nav-calendar" onclick="showPage('calendar')">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2 5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+  カレンダー
+</button>
+</nav>
+
+<!-- ===== Template Modal ===== -->
+<div id="tmod" class="modal-bg">
+  <div class="modal-sh">
+    <div class="mh"></div>
+    <div class="mt" id="tmod-title">テンプレートを追加</div>
+    <input type="hidden" id="t-id">
+    <div class="g2">
+      <div class="row">
+        <label class="lbl">出発地</label>
+        <input type="text" id="t-from" class="inp" placeholder="出発地">
+      </div>
+      <div class="row">
+        <label class="lbl">到着地</label>
+        <input type="text" id="t-to" class="inp" placeholder="到着地">
+      </div>
+    </div>
+    <div class="row">
+      <label class="lbl">福祉用具</label>
+      <div class="chips" id="t-eq-chips"></div>
+      <input type="text" id="t-eq-other" class="inp" placeholder="その他の内容" style="margin-top:7px; display:none;">
+    </div>
+    <div class="row">
+      <label class="lbl">訪問目的</label>
+      <input type="text" id="t-purpose" class="inp" placeholder="例：転院片道搬送、通院">
+    </div>
+    <div class="row">
+      <label class="lbl">概算金額（目安・参考値）</label>
+        <div class="g2">
+          <input type="number" id="t-est-lo" class="inp est" placeholder="下限 ¥">
+          <input type="number" id="t-est-hi" class="inp est" placeholder="上限 ¥">
+        </div>
+      <div style="font-size:10px; color:#94a3b8; margin-top:3px;">記録入力時に自動入力されます</div>
+    </div>
+    <div class="row">
+      <label class="lbl">同乗者</label>
+      <input type="text" id="t-comp" class="inp" placeholder="例：家族同乗、追走、同乗ナシ">
+    </div>
+    <div class="row">
+      <label class="lbl">固定メモ</label>
+      <input type="text" id="t-notes" class="inp" placeholder="毎回同じメモがあれば">
+    </div>
+    <button class="btn-save" onclick="saveTpl()">💾 保存する</button>
+    <button class="btn-full btn-gray" onclick="closeTMod()" style="margin-top:6px;">キャンセル</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+const EQ = ['車いす', 'ストレッチャー', 'リタライニング', '歩行', 'その他'];
+const KR = 'kt_rec_v3';
+const KT = 'kt_tpl_v3';
+const KS = 'kt_hist_sort'; // ▼ 追加：表示順の保存キー
+
+let recs = [], tpls = [];
+let rEq = [], tEq = [];
+let hYM = {}, eYM = {};
+let curV = '1', curAL = 'ok', curDir = '→';
+
+// ▼ 追加：表示順（'desc'=新しい順・デフォルト、'asc'=古い順）
+let histSort = localStorage.getItem(KS) || 'desc';
+
+const $ = id => document.getElementById(id);
+const load = k => { try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e) { return []; } };
+const sv = (k,d) => localStorage.setItem(k, JSON.stringify(d));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+const pad = n => String(n).padStart(2,'0');
+const esc = s => s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+const fN = n => Number(n||0).toLocaleString('ja-JP');
+
+function today() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function nowT()   { const d=new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+function fDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${parseInt(m)}/${parseInt(d)}`; }
+function fDateL(s){ if(!s) return ''; const [y,m,d]=s.split('-'); return `${y}年${parseInt(m)}月${parseInt(d)}日`; }
+function fYM(y,m) { return `${y}年${m}月`; }
+function fEst(r) {
+  var lo = r.estimateLo || r.estimate || 0, hi = r.estimateHi || 0;
+  if (!lo && !hi) return '';
+  if (lo && hi) return '¥' + fN(lo) + '〜¥' + fN(hi);
+  if (lo) return '¥' + fN(lo) + '〜';
+  return '〜¥' + fN(hi);
+}
+
+// ▼ 追加：表示順の切り替えボタン更新
+function updateSortBtn() {
+  var btn = $('sort-btn');
+  if (!btn) return;
+  if (histSort === 'desc') {
+    btn.textContent = '↓ 新しい順';
+    btn.className = 'sort-btn desc';
+  } else {
+    btn.textContent = '↑ 古い順';
+    btn.className = 'sort-btn asc';
+  }
+}
+
+// ▼ 追加：表示順の切り替え処理
+function toggleHistSort() {
+  histSort = (histSort === 'desc') ? 'asc' : 'desc';
+  localStorage.setItem(KS, histSort);
+  updateSortBtn();
+  renderHist();
+}
+
+// ── Init ──
+// ── カレンダー ──
+var calYear, calMonth;
+function initCal() {
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+function calMove(d) {
+  calMonth += d;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCal();
+}
+function renderCal() {
+  var months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var days = ['日','月','火','水','木','金','土'];
+  document.getElementById('cal-title').textContent = calYear + '年 ' + months[calMonth];
+  var grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  // 曜日ヘッダー
+  days.forEach(function(d, i) {
+    var hd = document.createElement('div');
+    hd.textContent = d;
+    hd.style.cssText = 'font-size:11px;font-weight:700;padding:4px 0;color:' + (i===0?'#ef4444':i===6?'#3b82f6':'#64748b');
+    grid.appendChild(hd);
+  });
+  // 記録を日付でマップ化
+  var recs = JSON.parse(localStorage.getItem('kt_rec_v3') || '[]');
+  var recMap = {};
+  recs.forEach(function(r) {
+    var d = r.date || '';
+    if (!recMap[d]) recMap[d] = [];
+    recMap[d].push(r);
+  });
+  // 月の最初の曜日と日数
+  var firstDay = new Date(calYear, calMonth, 1).getDay();
+  var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  var today = new Date();
+  var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  // 空白セル
+  for (var i = 0; i < firstDay; i++) {
+    grid.appendChild(document.createElement('div'));
+  }
+  // 日付セル
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+    var cell = document.createElement('div');
+    var dayOfWeek = new Date(calYear, calMonth, day).getDay();
+    var hasRec = recMap[dateStr] && recMap[dateStr].length > 0;
+    var isToday = dateStr === todayStr;
+    cell.style.cssText = 'padding:4px 2px;border-radius:8px;cursor:' + (hasRec?'pointer':'default') + ';min-height:44px;display:flex;flex-direction:column;align-items:center;' + (isToday?'background:#dbeafe;':'') + (hasRec?'background:' + (isToday?'#bfdbfe':'#f0f9ff') + ';border:1px solid #93c5fd;':'');
+    var numEl = document.createElement('div');
+    numEl.textContent = day;
+    numEl.style.cssText = 'font-size:13px;font-weight:' + (isToday?'800':'500') + ';color:' + (dayOfWeek===0?'#ef4444':dayOfWeek===6?'#3b82f6':'#1e293b') + ';';
+    cell.appendChild(numEl);
+    if (hasRec) {
+      var cnt = document.createElement('div');
+      cnt.textContent = recMap[dateStr].length + '件';
+      cnt.style.cssText = 'font-size:10px;color:#2563eb;font-weight:700;';
+      cell.appendChild(cnt);
+      // 名前を小さく表示（最大2件）
+      recMap[dateStr].slice(0,2).forEach(function(r) {
+        var nm = document.createElement('div');
+        nm.textContent = (r.user||'').substring(0,4);
+        nm.style.cssText = 'font-size:9px;color:#475569;line-height:1.2;';
+        cell.appendChild(nm);
+      });
+      (function(ds){ cell.onclick = function(){ showCalDetail(ds); }; })(dateStr);
+    }
+    grid.appendChild(cell);
+  }
+  // 詳細パネルを隠す
+  document.getElementById('cal-detail').style.display = 'none';
+}
+function showCalDetail(dateStr) {
+  var recs = JSON.parse(localStorage.getItem('kt_rec_v3') || '[]');
+  var dayRecs = recs.filter(function(r){ return r.date === dateStr; });
+  // 出発時刻でソート（空の場合は末尾）
+  dayRecs.sort(function(a,b){
+    var ta = a.t3 || '99:99', tb = b.t3 || '99:99';
+    return ta < tb ? -1 : ta > tb ? 1 : 0;
+  });
+  var parts = dateStr.split('-');
+  document.getElementById('cal-detail-title').textContent = parts[0]+'年'+parseInt(parts[1])+'月'+parseInt(parts[2])+'日 の記録';
+  var list = document.getElementById('cal-detail-list');
+  list.innerHTML = '';
+  dayRecs.forEach(function(r) {
+    var item = document.createElement('div');
+    item.style.cssText = 'background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;';
+    var time = document.createElement('div');
+    time.textContent = r.t3 || '--:--';
+    time.style.cssText = 'font-size:15px;font-weight:800;color:#2563eb;min-width:42px;';
+    var info = document.createElement('div');
+    var name = document.createElement('div');
+    name.textContent = r.user || '（名前なし）';
+    name.style.cssText = 'font-size:14px;font-weight:700;color:#1e293b;';
+    var sub = document.createElement('div');
+    sub.textContent = (r.purpose||'') + (r.from ? ' 📍'+r.from : '') + (r.to ? ' '+(r.direction||'→')+r.to : '');
+    sub.style.cssText = 'font-size:11px;color:#64748b;margin-top:2px;';
+    info.appendChild(name);
+    info.appendChild(sub);
+    var editBtn = document.createElement('button');
+    editBtn.textContent = '✏️';
+    editBtn.title = '編集';
+    editBtn.style.cssText = 'margin-left:auto;padding:6px 10px;border:none;border-radius:8px;background:#eff6ff;color:#2563eb;font-size:16px;cursor:pointer;flex-shrink:0;';
+    (function(rec){ editBtn.onclick = function(){ editRec(rec.id); }; })(r);
+    item.appendChild(time);
+    item.appendChild(info);
+    item.appendChild(editBtn);
+    list.appendChild(item);
+  });
+  document.getElementById('cal-detail').style.display = 'block';
+  document.getElementById('cal-detail').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── カスタム時刻セレクト ──
+function buildTimeSelects() {
+  ['r-t-out','r-t-in','r-t3','r-t4'].forEach(function(id) {
+    var hSel = $(id+'-h'), mSel = $(id+'-m');
+    if (!hSel || !mSel) return;
+    var hOpts = '<option value="">--</option>';
+    for (var h=0; h<24; h++) hOpts += '<option value="'+pad(h)+'">'+pad(h)+'</option>';
+    var mOpts = '<option value="">--</option>';
+    for (var m=0; m<60; m++) mOpts += '<option value="'+pad(m)+'">'+pad(m)+'</option>';
+    hSel.innerHTML = hOpts;
+    mSel.innerHTML = mOpts;
+  });
+}
+function getTimeVal(id) {
+  var h = $(id+'-h').value, m = $(id+'-m').value;
+  return (h !== '' && m !== '') ? h+':'+m : '';
+}
+function setTimeVal(id, val) {
+  var h = '', m = '';
+  if (val && val.indexOf(':') >= 0) {
+    var p = val.split(':');
+    h = pad(parseInt(p[0], 10));
+    m = pad(parseInt(p[1], 10));
+  }
+  $(id+'-h').value = h;
+  $(id+'-m').value = m;
+}
+
+function updateDateCount() {
+  renderDayUserCards();
+}
+
+// ── Morning section ──
+var _morningDone = false;
+
+function onDateChange() {
+      _morningDone = false;
+      lockMorning(false);
+      $('morning-card').style.display = 'block';
+      $('morning-banner').style.display = 'none';
+      var selDate = $('r-date').value;
+      var raw = localStorage.getItem('kt_morning_v1');
+      if (raw) {
+        var m = JSON.parse(raw);
+        if (m.date === selDate) {
+          $('r-odo-out').value = m.odoOut || '';
+          $('r-odo-in').value = m.odoIn || '';
+        } else {
+          var lOdo = localStorage.getItem('kt_odo_' + (curV||'1'));
+          $('r-odo-out').value = lOdo || '';
+          $('r-odo-in').value = '';
+        }
+      } else {
+        var lOdo = localStorage.getItem('kt_odo_' + (curV||'1'));
+        $('r-odo-out').value = lOdo || '';
+        $('r-odo-in').value = '';
+      }
+      renderDayUserCards();
+    }
+
+    function completeMorning() {
+      _morningDone = true;
+      var mData = {
+        date: today(),
+        vehicle: curV,
+        al: curAL,
+        tOutH: $('r-t-out-h').value, tOutM: $('r-t-out-m').value,
+        tInH: $('r-t-in-h').value, tInM: $('r-t-in-m').value,
+        odoOut: $('r-odo-out').value, odoIn: $('r-odo-in').value
+      };
+      localStorage.setItem('kt_morning_v1', JSON.stringify(mData));
+      lockMorning(true);
+      if ($('r-odo-in').value) localStorage.setItem('kt_odo_' + curV, $('r-odo-in').value);
+      $('morning-card').style.display = 'none';
+      var al = curAL === 'ok' ? '\u2705\u5408\u683c' : '\u26a0\ufe0f\u6ce8\u610f';
+      var tout = getTimeVal('r-t-out') || '--:--';
+      var tin  = getTimeVal('r-t-in')  || '--:--';
+      var odoOut = $('r-odo-out').value || '\u2014';
+      $('morning-summary').textContent = 'AL:' + al + '  \u51fa\u5eab:' + tout + '(' + odoOut + 'km)  \u5165\u5eab:' + tin;
+      $('morning-banner').style.display = 'flex';
+      toast('\u2600\ufe0f \u671d\u306e\u8a18\u9332\u3092\u4fdd\u5b58\u3057\u307e\u3057\u305f');
+    }
+    function openMorning() {
+      _morningDone = false;
+      lockMorning(false);
+      $('morning-card').style.display = 'block';
+      $('morning-banner').style.display = 'none';
+    }
+    function lockMorning(flag) {
+      ['r-odo-out','r-odo-in','r-t-out-h','r-t-out-m','r-t-in-h','r-t-in-m'].forEach(function(id) { $(id).disabled = flag; });
+      document.querySelectorAll('#al-g .tog').forEach(function(b) { b.disabled = flag; });
+    }
+    function restoreMorning() {
+      $('r-odo-out').value = ''; $('r-odo-in').value = '';
+  var raw = localStorage.getItem('kt_morning_v1');
+  if (!raw) {
+    var selV = curV || '1';
+    var lastOdo = localStorage.getItem('kt_odo_' + selV);
+    if (lastOdo) $('r-odo-out').value = lastOdo;
+        $('r-odo-in').value = '';
+    return;
+  }
+  var m = JSON.parse(raw);
+  if (m.date !== today()) {
+    localStorage.removeItem('kt_morning_v1');
+    var selV = curV || '1';
+    var lastOdo = localStorage.getItem('kt_odo_' + selV);
+    if (lastOdo) $('r-odo-out').value = lastOdo;
+        $('r-odo-in').value = '';
+    return;
+  }
+  // 車両を復元
+      if (m.vehicle) {
+        curV = m.vehicle;
+        document.querySelectorAll('.vm button').forEach(function(b) {
+          b.classList.remove('sel');
+          if (b.dataset.v === curV) b.classList.add('sel');
+        });
+      }
+      if (m.al) {
+    curAL = m.al;
+    var cls = m.al === 'ok' ? 's-gr' : 's-rd';
+    document.querySelectorAll('#al-g .tog').forEach(function(b) {
+      b.classList.remove('s-bl','s-gr','s-rd');
+      if (b.dataset.v === m.al) b.classList.add(cls);
+    });
+  }
+  $('r-t-out-h').value = m.tOutH || '';
+  $('r-t-out-m').value = m.tOutM || '';
+  $('r-t-in-h').value  = m.tInH  || '';
+  $('r-t-in-m').value  = m.tInM  || '';
+  $('r-odo-out').value  = m.odoOut || '';
+  $('r-odo-in').value   = m.odoIn || '';
+  completeMorning();
+}
+
+// ── Day user cards ──
+function renderDayUserCards() {
+  var d = $('r-date').value;
+  var list = $('day-users-list');
+  if (!list) return;
+  if (!d) { list.innerHTML = ''; return; }
+  var dayRecs = recs.filter(function(r){ return r.date === d; });
+  dayRecs.sort(function(a,b){ return (a.t3||'99:99').localeCompare(b.t3||'99:99'); });
+  if (!dayRecs.length) {
+    list.innerHTML = '<div style="text-align:center;padding:14px 0 6px;color:#94a3b8;font-size:13px;">この日の記録はまだありませこ</div>';
+    return;
+  }
+  list.innerHTML = dayRecs.map(function(r) {
+    var route = '';
+    if (r.t3 || r.t4) route += (r.t3||'--') + '〜' + (r.t4||'--');
+    if (r.from) route += (route ? ' ' : '') + esc(r.from);
+    if (r.to)   route += (r.direction || '→') + esc(r.to);
+    if (r.total) route += (route ? '  ' : '') + '¥' + fN(r.total);
+    return '<div class="user-card">' +
+      '<div class="uc-time">' + esc(r.t3 || '--:--') + '</div>' +
+      '<div class="uc-info">' +
+        '<div class="uc-name">' + (esc(r.user) || '（名前なし）') + '</div>' +
+        '<div class="uc-route">' + route + '</div>' +
+      '</div>' +
+      '<button class="uc-edit" onclick="editRec(\'' + r.id + '\')">✏️</button>' +
+    '</div>';
+  }).join('');
+}
+
+// ── User form show/hide ──
+function showUserForm() {
+  $('user-form-section').style.display = 'block';
+  $('btn-add-user').style.display = 'none';
+  renderTplPicker();
+  setTimeout(function(){
+    var el = $('user-form-section');
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 50);
+}
+
+function hideUserForm() {
+  $('user-form-section').style.display = 'none';
+  $('btn-add-user').style.display = 'block';
+  renderDayUserCards();
+}
+
+// ── Template picker (inside user form) ──
+function renderTplPicker() {
+  var card = $('tpl-picker-card');
+  var list = $('tpl-picker-list');
+  if (!card || !list) return;
+  if (!tpls.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  list.innerHTML = tpls.map(function(t) {
+    var label = [t.from, t.to].filter(Boolean).join('→') || '（ルートなし）';
+    if (t.purpose) label += '  ' + t.purpose;
+    return '<button class="tpl-chip" onclick="applyTemplate(\'' + t.id + '\')" id="tplchip-' + t.id + '">' + esc(label) + '</button>';
+  }).join('');
+}
+
+function applyTemplate(id) {
+  document.querySelectorAll('.tpl-chip').forEach(function(b){ b.classList.remove('sel'); });
+  var chip = $('tplchip-' + id);
+  if (chip) chip.classList.add('sel');
+  var t = tpls.find(function(x){ return x.id === id; });
+  if (!t) return;
+  $('r-from').value    = t.from    || '';
+  $('r-to').value      = t.to      || '';
+  $('r-purpose').value = t.purpose || '';
+  $('r-est-lo').value  = t.estimateLo ? String(t.estimateLo) : (t.estimate ? String(t.estimate) : '');
+  $('r-est-hi').value  = t.estimateHi ? String(t.estimateHi) : '';
+  $('r-comp').value    = t.comp    || '';
+  if (t.notes) $('r-notes').value = t.notes;
+  rEq.length = 0;
+  normEq(t.equipment || []).forEach(function(e){ rEq.push(e); });
+  renderChips('r_eq-chips', rEq, 'r-eq-other');
+}
+
+function init() {
+  recs = load(KR); tpls = load(KT);
+  const now = new Date();
+  hYM = { y: now.getFullYear(), m: now.getMonth()+1 };
+  eYM = { y: now.getFullYear(), m: now.getMonth()+1 };
+  buildTimeSelects();
+  $('r-date').value = today();
+  renderChips('r_eq-chips', rEq, 'r-eq-other');
+  renderChips('t-eq-chips', tEq, 't-eq-other');
+  refreshDataLists();
+  renderTpls();
+  renderHist();
+  updMons();
+  renderDayUserCards();
+  initCal();
+  restoreMorning();
+  updateSortBtn(); // ▼ 追加：起動時にボタン表示を初期化
+      // ブラウザ自動復元対策：遅延で入庫距離を再チェック
+      setTimeout(function() {
+        var m = localStorage.getItem('kt_morning_v1');
+        if (!m || JSON.parse(m).date !== today()) {
+          $('r-odo-in').value = '';
+        }
+      }, 200);
+}
+
+// ── Page ──
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  $('page-'+n).classList.add('active');
+  $('nav-'+n).classList.add('active');
+  if (n==='history') renderHist();
+if(n==='calendar') renderCal();
+}
+
+// ── Toggle ──
+function setTog(gid, cls, btn) {
+  document.querySelectorAll(`#${gid} .tog`).forEach(b => b.classList.remove('s-bl','s-gr','s-rd'));
+  btn.classList.add(cls);
+  if (gid==='al-g') curAL = btn.dataset.v;
+  if (gid==='dir-g') curDir = btn.dataset.v;
+}
+
+// ── Vehicle ──
+function pickV(btn) {
+      document.querySelectorAll('.vm button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel'); curV = btn.dataset.v;
+      // 車両ごとの前日入庫距離を出庫距離にセット
+      var savedOdo = localStorage.getItem('kt_odo_' + curV);
+      $('r-odo-out').value = savedOdo || '';
+      $('r-odo-in').value = '';
+    }
+
+function getLastOdoIn(vehicle) {
+  var matched = recs.filter(function(r) { return r.vehicle === vehicle && r.odoIn > 0; });
+  if (matched.length === 0) return 0;
+  matched.sort(function(a, b) { return new Date(b.created) - new Date(a.created); });
+  return matched[0].odoIn;
+}
+
+// ── Eq helpers ──
+function normEq(arr) {
+  return (arr||[]).map(e => typeof e==='string' ? {name:e, own:'所有'} : e);
+}
+function eqLabel(e) {
+  return typeof e==='string' ? e : e.name;
+}
+function eqOwn(e) {
+  return typeof e==='string' ? '所有' : (e.own||'所有');
+}
+
+// ── Chips (3-state: off → 所有 → 貸出 → off / 歩行・その他は off → on → off) ──
+const EQ_SIMPLE = ['歩行', 'その他']; // 所有/貸出サイクルなし・バッジなし
+function renderChips(cid, arr, otherId) {
+  const w = $(cid); w.innerHTML = '';
+  EQ.forEach(eq => {
+    const idx = arr.findIndex(e => (typeof e==='string' ? e : e.name) === eq);
+    const isSimple = EQ_SIMPLE.includes(eq);
+    const state = idx >= 0 ? (isSimple ? 'on' : eqOwn(arr[idx])) : null;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (state === 'on' ? ' own' : state==='所有' ? ' own' : state==='貸出' ? ' rent' : '');
+    b.innerHTML = esc(eq) + (!isSimple && state ? `<span class="eq-bdg">${state}</span>` : '');
+    b.onclick = () => {
+      if (isSimple) {
+        if (idx < 0) arr.push({name: eq, own: 'on'});  // off → on
+        else arr.splice(idx, 1);                         // on → off
+      } else {
+        if (idx < 0) {
+          arr.push({name: eq, own: '所有'});           // off → 所有
+        } else if (arr[idx].own === '所有' || arr[idx] === '所有') {
+          arr[idx] = {name: eq, own: '貸出'};          // 所有 → 貸出
+        } else {
+          arr.splice(idx, 1);                           // 貸出 → off
+        }
+      }
+      renderChips(cid, arr, otherId);
+    };
+    w.appendChild(b);
+  });
+  if (otherId) {
+    $(otherId).style.display = arr.some(e => (typeof e==='string'?e:e.name)==='その他') ? 'block' : 'none';
+  }
+}
+
+// ── Datalists（テンプレートから自動候補を生成） ──
+function refreshDrop() { refreshDataLists(); }  // 後方互換
+
+function refreshDataLists() {
+  const froms    = [...new Set(tpls.map(t=>t.from).filter(Boolean))];
+  const tos      = [...new Set(tpls.map(t=>t.to).filter(Boolean))];
+  const comps    = [...new Set(tpls.map(t=>t.comp).filter(Boolean))];
+  const purposes = [...new Set(tpls.map(t=>t.purpose).filter(Boolean))];
+  const fill = (id, arr) => {
+    const dl=$(id); if(!dl) return; dl.innerHTML='';
+    arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; dl.appendChild(o); });
+  };
+  fill('dl-from',    froms);
+  fill('dl-to',      tos);
+  fill('dl-comp',    comps);
+  fill('dl-purpose', purposes);
+}
+
+// ── 出発地が入力されたら自動入力 ──
+function autoFill() {
+  const from = $('r-from').value.trim();
+  if (!from) return;
+  const t = tpls.find(x => x.from === from);
+  if (!t) return;
+  if (!$('r-to').value)      $('r-to').value      = t.to      || '';
+  if (!$('r-purpose').value) $('r-purpose').value = t.purpose || '';
+  if (!$('r-est-lo').value)  $('r-est-lo').value  = t.estimateLo ? String(t.estimateLo) : (t.estimate ? String(t.estimate) : '');
+  if (!$('r-est-hi').value)  $('r-est-hi').value  = t.estimateHi ? String(t.estimateHi) : '';
+  if (!$('r-comp').value)    $('r-comp').value     = t.comp    || '';
+  if (!$('r-notes').value && t.notes) $('r-notes').value = t.notes;
+  if (rEq.length === 0 && (t.equipment||[]).length) {
+    normEq(t.equipment).forEach(e => rEq.push(e));
+    renderChips('r_eq-chips', rEq, 'r-eq-other');
+  }
+}
+
+// ── Save Record ──
+let _editId = null;
+
+function saveRec() {
+  if (!$('r-date').value)         { alert('日付を入力してください'); return; }
+  if (!$('r-user').value.trim())  { alert('利用者名を入力してください'); return; }
+
+  // estimate range
+  const otherText = $('r-eq-other').value.trim();
+  const eqArr = normEq(rEq).map(e =>
+    e.name === 'その他' && otherText ? {name: 'その他('+otherText+')', own: e.own} : e
+  );
+
+  const rec = {
+    id: _editId || uid(),
+    date:        $('r-date').value,
+    tOut:        getTimeVal('r-t-out'),
+    tIn:         getTimeVal('r-t-in'),
+    vehicle:     curV,
+    alcohol:     curAL,
+    user:      $('r-user').value.trim(),
+    from:      $('r-from').value.trim(),
+    to:        $('r-to').value.trim(),
+    equipment: eqArr,
+    direction: curDir,
+    purpose:   $('r-purpose').value.trim(),
+    odoOut: parseFloat($('r-odo-out').value) || 0,
+    odoIn:  parseFloat($('r-odo-in').value)  || 0,
+    t3: getTimeVal('r-t3'),
+    t4: getTimeVal('r-t4'),
+    dist:    parseFloat($('r-dist').value)  || 0,
+    total:   parseInt($('r-total').value, 10) || 0,
+    estimateLo: parseInt($('r-est-lo').value, 10) || 0,
+    estimateHi: parseInt($('r-est-hi').value, 10) || 0,
+    comp:    $('r-comp').value.trim(),
+    medical: $('r-med').value.trim(),
+    notes:   $('r-notes').value.trim(),
+    created: new Date().toISOString()
+  };
+
+  if (_editId) {
+    const idx = recs.findIndex(r => r.id === _editId);
+    if (idx >= 0) recs[idx] = rec; else recs.push(rec);
+    toast('✅ 更新しました');
+  } else {
+    recs.push(rec);
+    toast('✅ 保存しました');
+  }
+  sv(KR, recs);
+  clearF();
+}
+
+function editRec(id) {
+  const r = recs.find(x => x.id === id);
+  if (!r) return;
+  _editId = id;
+  // フォームに値をセット
+  $('r-date').value    = r.date    || '';
+  setTimeVal('r-t-out', r.tOut || '');
+  setTimeVal('r-t-in',  r.tIn  || '');
+  $('r-user').value    = r.user    || '';
+  $('r-from').value    = r.from    || '';
+  $('r-to').value      = r.to      || '';
+  $('r-purpose').value = r.purpose || '';
+  $('r-est-lo').value  = r.estimateLo ? String(r.estimateLo) : (r.estimate ? String(r.estimate) : '');
+  $('r-est-hi').value  = r.estimateHi ? String(r.estimateHi) : '';
+  setTimeVal('r-t3', r.t3 || '');
+  setTimeVal('r-t4', r.t4 || '');
+  $('r-dist').value    = r.dist    ? String(r.dist)  : '';
+  $('r-total').value   = r.total   ? String(r.total) : '';
+  $('r-comp').value    = r.comp    || '';
+  $('r-med').value     = r.medical || '';
+  $('r-notes').value   = r.notes   || '';
+  $('r-odo-out').value = r.odoOut  ? String(r.odoOut) : '';
+  $('r-odo-in').value  = r.odoIn   ? String(r.odoIn)  : '';
+  // 車両
+  curV = r.vehicle || '1';
+  document.querySelectorAll('.vm button').forEach(b => {
+    b.classList.remove('sel');
+    if (b.dataset.v === curV) b.classList.add('sel');
+  });
+  // AL
+  curAL = r.alcohol || 'ok';
+  document.querySelectorAll('#al-g .tog').forEach(b => {
+    b.classList.remove('s-gr','s-rd');
+    if (b.dataset.v === curAL) b.classList.add(curAL === 'ok' ? 's-gr' : 's-rd');
+  });
+  // 方向
+  curDir = r.direction || '→';
+  document.querySelectorAll('#dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === curDir) b.classList.add('s-bl');
+  });
+  // 福祉用具
+  rEq.length = 0;
+  normEq(r.equipment||[]).forEach(e => rEq.push(e));
+  renderChips('r-eq-chips', rEq, 'r-eq-other');
+  // ボタン切り替え
+  $('btn-save-main').textContent = '✏️ 更新する';
+  $('btn-save-main').style.background = '#059669';
+  // 記録入力タブへ移動 + フォームを表示
+  showPage('record');
+  openMorning();
+  showUserForm();
+  toast('📝 編集モード：更新するで保存します');
+}
+
+function cancelEdit() {
+  _editId = null;
+  $('btn-save-main').textContent = '💾 保存する';
+  $('btn-save-main').style.background = '';
+  clearF();
+  toast('キャンセルしました');
+}
+
+function clearF() {
+  _editId = null;
+  $('btn-save-main').textContent = '💾 保存する';
+  $('btn-save-main').style.background = '';
+  // 日付・AL・車両・odo・tOut/tIn は保持（朝の記録は1日1回なので保持）
+  ['r-user','r-from','r-to','r-purpose','r-est-lo','r-est-hi',
+   'r-dist','r-total','r-comp','r-med','r-notes'].forEach(function(id){ if($(id)) $(id).value=''; });
+  setTimeVal('r-t3', ''); setTimeVal('r-t4', '');
+  if ($('r-eq-other')) $('r-eq-other').value = '';
+  rEq.length = 0;
+  renderChips('r-eq-chips', rEq, 'r-eq-other');
+  // 方向リセット
+  curDir = '→';
+  document.querySelectorAll('#dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === '→') b.classList.add('s-bl');
+  });
+  hideUserForm();
+}
+
+// ── Templates ──
+function renderTpls() {
+  const el = $('tpl-list');
+  if (!tpls.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-i">📋</div><div class="empty-t">テンプレートがありません<br>＋ボタンで登録してください</div></div>`;
+    return;
+  }
+  el.innerHTML = tpls.map(t => `
+    <div class="li">
+      <div class="li-hd">
+        <div>
+          <div class="li-name">📍 ${esc(t.from)} → ${esc(t.to)}</div>
+          ${t.purpose ? `<div class="li-sub">${esc(t.purpose)}</div>` : ''}
+        </div>
+        ${(t.estimateLo||t.estimateHi) ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ${fEst(t)}</div>` : ''}
+      </div>
+      <div class="li-meta">
+        ${normEq(t.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-gy'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+      </div>
+      <div class="li-acts">
+        <button class="btn-sm btn-e" onclick="openTMod('${t.id}')">編集</button>
+        <button class="btn-sm btn-d" onclick="delTpl('${t.id}')">削除</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTMod(id) {
+  $('tmod-title').textContent = id ? 'テンプレートを編集' : 'テンプレートを追加';
+  tEq.length = 0;
+  if (id) {
+    const t = tpls.find(x=>x.id===id);
+    if(!t) return;
+    $('t-id').value      = t.id;
+    $('t-from').value    = t.from    || '';
+    $('t-to').value      = t.to      || '';
+    $('t-purpose').value = t.purpose || '';
+    $('t-est-lo').value = t.estimateLo || t.estimate || '';
+      $('t-est-hi').value = t.estimateHi || '';
+    $('t-comp').value    = t.comp    || '';
+    $('t-notes').value   = t.notes   || '';
+    normEq(t.equipment||[]).forEach(e => tEq.push(e));
+  } else {
+    ['t-id','t-from','t-to','t-purpose','t-est-lo','t-est-hi','t-comp','t-notes'].forEach(id => $(id).value = '');
+  }
+  renderChips('t-eq-chips', tEq, 't-eq-other');
+  $('tmod').classList.add('open');
+}
+function closeTMod() { $('tmod').classList.remove('open'); }
+
+function saveTpl() {
+  if (!$('t-from').value.trim() && !$('t-to').value.trim()) { alert('出発地か到着地を入力してください'); return; }
+  const tOtherText = $('t-eq-other').value.trim();
+  const eqArr = normEq(tEq).map(e =>
+    e.name === 'その他' && tOtherText ? {name: 'その他('+tOtherText+')', own: e.own} : e
+  );
+  const t = {
+    id:        $('t-id').value || uid(),
+    from:      $('t-from').value.trim(),
+    to:        $('t-to').value.trim(),
+    equipment: eqArr,
+    purpose:   $('t-purpose').value.trim(),
+    estimateLo: parseInt($('t-est-lo').value, 10) || 0,
+    estimateHi: parseInt($('t-est-hi').value, 10) || 0,
+    comp:      $('t-comp').value.trim(),
+    notes:     $('t-notes').value.trim()
+  };
+  const id = $('t-id').value;
+  if (id) { const i=tpls.findIndex(x=>x.id===id); if(i>=0) tpls[i]=t; } else tpls.push(t);
+  sv(KT, tpls); closeTMod(); renderTpls(); refreshDrop();
+  toast('✅ テンプレート保存');
+}
+
+function delTpl(id) {
+  if (!confirm('削除しますか？')) return;
+  tpls = tpls.filter(t=>t.id!==id); sv(KT, tpls); renderTpls(); refreshDrop();
+}
+
+// ── History ──
+function getMRecs(y,m) {
+  const pf = `${y}-${pad(m)}`;
+  // 常に日付・時刻の昇順で取得（表示時に反転）
+  return recs.filter(r=>r.date&&r.date.startsWith(pf))
+    .sort((a,b)=>a.date.localeCompare(b.date)||(a.t3||'').localeCompare(b.t3||''));
+}
+
+function renderHist() {
+  // ▼ 修正：histSort に基づいて表示順を制御
+  const rs = getMRecs(hYM.y, hYM.m);
+  if (histSort === 'desc') rs.reverse(); // 新しい順＝降順
+
+  updateSortBtn(); // ボタン表示を常に最新に保つ
+
+  const sum = $('h-sum'), list = $('h-list');
+  if (!rs.length) {
+    sum.innerHTML = `<div style="color:#94a3b8;font-size:13px;text-align:center;padding:6px;">この月の記録はありません</div>`;
+    list.innerHTML=''; return;
+  }
+  const km  = rs.reduce((s,r)=>s+(r.dist||0),0);
+  const rev = rs.reduce((s,r)=>s+(r.total||0),0);
+  sum.innerHTML = `<div class="sg">
+    <div class="si"><div class="sv">${rs.length}</div><div class="sl">件数</div></div>
+    <div class="si"><div class="sv">${km.toFixed(1)}</div><div class="sl">総km</div></div>
+    <div class="si"><div class="sv">¥${fN(rev)}</div><div class="sl">総売上</div></div>
+  </div>`;
+
+  list.innerHTML = rs.map((r,i)=>`
+    <div class="li" onclick="$('d${i}').classList.toggle('open')">
+      <div class="li-hd">
+        <div>
+          <div class="li-name">${esc(r.user)||'(名前なし)'}</div>
+          <div class="li-sub">${fDate(r.date)} ${r.t3||''} ${esc(r.from)}${r.direction||'→'}${esc(r.to)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:800;color:#059669;font-size:15px;">¥${fN(r.total)}</div>
+          <div style="font-size:11px;color:#94a3b8;">${r.dist}km</div>
+        </div>
+      </div>
+      <div class="li-meta">
+        <span class="bdg b-bl">車${r.vehicle}</span>
+        <span class="bdg ${r.alcohol==='ok'?'b-gr':'b-rd'}">AL${r.alcohol==='ok'?'○':'×'}</span>
+        ${normEq(r.equipment||[]).map(e=>`<span class="bdg ${e.own==='貸出'?'b-or':'b-bl'}">${esc(e.name)}<small style="font-size:9px;margin-left:2px;">${e.own}</small></span>`).join('')}
+        ${r.medical?`<span class="bdg b-rd">${esc(r.medical)}</span>`:''}
+      </div>
+      <div id="d${i}" class="det">
+        <div class="dr"><span class="dk">出庫距離</span><span class="dv">${r.odoOut||'—'} km</span></div>
+        <div class="dr"><span class="dk">入庫距離</span><span class="dv">${r.odoIn||'—'} km</span></div>
+        <div class="dr"><span class="dk">出発時刻</span><span class="dv">${r.t3||'—'}</span></div>
+        <div class="dr"><span class="dk">到着時刻</span><span class="dv">${r.t4||'—'}</span></div>
+        <div class="dr"><span class="dk">同乗者</span><span class="dv">${esc(r.comp)||'—'}</span></div>
+        <div class="dr"><span class="dk">訪問目的</span><span class="dv">${esc(r.purpose)||'—'}</span></div>
+        ${(r.estimateLo||r.estimateHi||r.estimate)?`<div class="dr"><span class="dk">概算</span><span class="dv">${fEst(r)}</span></div>`:''}
+        ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
+        <div style="margin-top:8px;display:flex;gap:8px;">
+          <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
+          <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function delRec(id) {
+  if(!confirm('削除しますか？')) return;
+  recs = recs.filter(r=>r.id!==id); sv(KR,recs); renderHist();
+}
+
+function chM(t,d) {
+  const o = t==='h' ? hYM : eYM;
+  o.m+=d; if(o.m>12){o.m=1;o.y++;} if(o.m<1){o.m=12;o.y--;}
+  updMons(); if(t==='h') renderHist();
+}
+function updMons() { $('h-mon').textContent=fYM(hYM.y,hYM.m); $('e-mon').textContent=fYM(eYM.y,eYM.m); }
+
+// ── CSV ──
+function doCSV() {
+  const rs = getMRecs(eYM.y, eYM.m);
+  if(!rs.length){alert('この月の記録がありません');return;}
+  const h = ['日付','車両','AL確認','AL時刻','利用者名','出発地','到着地',
+    '出庫距離(km)','入庫距離(km)','出発時刻','到着時刻',
+    '走行距離(km)','同乗者','福祉用具','医療ケア','合計金額(円)','概算金額_下限(円)','概算金額_上限(円)','訪問目的','備考'];
+  const rows = rs.map(r=>[
+    r.date,'車両'+r.vehicle,r.alcohol==='ok'?'合格':'要注意',r.alTime||'',
+    r.user||'',r.from||'',r.to||'',
+    r.odoOut||0,r.odoIn||0,r.t3||'',r.t4||'',
+    r.dist||0,r.comp||'',normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・'),r.medical||'',
+    r.total||0,r.estimateLo||r.estimate||0,r.estimateHi||0,r.purpose||'',r.notes||''
+  ]);
+  const csv=[h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download=`搬送日報_${eYM.y}年${pad(eYM.m)}月.csv`;
+  a.click();
+}
+
+// ── Print ──
+function doPrint() {
+  const rs = getMRecs(eYM.y, eYM.m);
+  if(!rs.length){alert('この月の記録がありません');return;}
+  $('pv-sub').textContent = `${fYM(eYM.y,eYM.m)}　出力日：${fDateL(today())}`;
+  const km=rs.reduce((s,r)=>s+(r.dist||0),0);
+  const rev=rs.reduce((s,r)=>s+(r.total||0),0);
+  $('pv-km').textContent=km.toFixed(1); $('pv-rev').textContent=fN(rev);
+  $('pv-body').innerHTML=rs.map(r=>`<tr>
+    <td>${r.date}</td><td style="text-align:center">車${r.vehicle}</td>
+    <td style="text-align:center">${r.alcohol==='ok'?'○':'×'} ${r.alTime||''}</td>
+    <td>${esc(r.user)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td>
+    <td style="text-align:center">${r.odoOut||''}</td><td style="text-align:center">${r.odoIn||''}</td>
+    <td style="text-align:center">${r.t3||''}</td><td style="text-align:center">${r.t4||''}</td>
+    <td style="text-align:center">${r.dist||0}</td>
+    <td>${esc(r.comp)}</td><td>${normEq(r.equipment||[]).map(e=>e.name+'('+e.own+')').join('・')}</td>
+    <td>${esc(r.medical)}</td>
+    <td style="text-align:right">${fN(r.total||0)}</td>
+    <td style="text-align:right">${fEst(r)}</td>
+    <td>${esc(r.notes)}</td>
+  </tr>`).join('');
+  window.print();
+}
+
+// ── Toast ──
+// ── Backup / Restore ──
+    function doBackup() {
+      var data = {
+        version: 3,
+        date: new Date().toISOString(),
+        records: load(KR),
+        templates: load(KT),
+        morning: localStorage.getItem('kt_morning_v1'),
+        odo1: localStorage.getItem('kt_odo_1'),
+        odo2: localStorage.getItem('kt_odo_2')
+      };
+      var json = JSON.stringify(data, null, 2);
+      var blob = new Blob([json], {type: 'application/json'});
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      var d = new Date();
+      a.download = '\u642C\u9001\u65E5\u5831_backup_' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '.json';
+      a.click();
+      toast('\u{1F4E5} \u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3092\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u307E\u3057\u305F');
+    }
+    function doRestore() {
+      if (!confirm('\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30D5\u30A1\u30A4\u30EB\u304B\u3089\u5FC�MLM�L�
+M�L�
+�WL�
+NWL���M�ёWMM̎L�
+�WL���L���L���L�
+��MLWM���L�
+L�
+MWL��L�
+�WL�
+NWL��L�L�L�
+M�L�
+
+L�
+��L�
+NWL�
+�Q��Q��JH�]\��	
+	ܙ\�ܙKY�[I�K��X��
+NB��[��[ۈ[�T�\�ܙJ[�]
+H�\��[HH[�]��[\��NY�
+Y�[JH�]\���\��XY\�H�]��[T�XY\�
+N�XY\��ۛ�YH�[��[ۊJH�H�\�]HH��Ӌ�\��JK�\��]��\�[
+NYf (!data.records && !data.templates) {
+            alert('\u6B63\u3057\u3044\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u30D5\u30A1\u30A4\u30EB\u3067\u306F\u3042\u308A\u307E\u305B\u3093');
+            return;
+          }
+          if (data.records) sv(KR, data.records);
+          if (data.templates) sv(KT, data.templates);
+          if (data.morning) localStorage.setItem('kt_morning_v1', data.morning);
+          if (data.odo1) localStorage.setItem('kt_odo_1', data.odo1);
+          if (data.odo2) localStorage.setItem('kt_odo_2', data.odo2);
+          recs = load(KR); tpls = load(KT);
+          renderTpls(); renderHist(); renderDayUserCards(); refreshDataLists();
+          toast('\u{1F4E4} \u5FA9\u5143\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\uFF08' + (data.records||[]).length + '\u4EF6\u306E\u8A18\u9332\u3001' + (data.templates||[]).length + '\u4EF6\u306E\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8\uFF09');
+        } catch(err) {
+          alert('\u30D5\u30A1\u30A4\u30EB\u306E\u8AAD\u307F\u8FBC\u307F\u306B\u5931\u6557\u3057\u307E\u3057\u305F: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      input.value = '';
+    }
+    function toast(msg) {
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+$('tmod').addEventListener('click', function(e){if(e.target===this)closeTMod();});
+init();
+</script>
+</body>
+</html>
