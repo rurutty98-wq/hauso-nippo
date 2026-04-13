@@ -153,7 +153,18 @@
     .mn-disp { font-size: 17px; font-weight: 800; color: #1e3a5f; }
     .mn-btn { padding: 7px 14px; border: none; background: white; border-radius: 8px; font-size: 15px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
-    /* ── Modal ── */
+        /* ── Sort button ── */
+    .sort-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+    .sort-btn {
+      padding: 7px 14px; border: 1.5px solid #e2e8f0; border-radius: 20px;
+      background: white; font-size: 13px; font-weight: 600; cursor: pointer;
+      color: #64748b; -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .sort-btn.desc { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .sort-btn.asc  { border-color: #7c3aed; background: #f5f3ff; color: #7c3aed; }
+
+/* ── Modal ── */
     .modal-bg {
       display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
       z-index: 200; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
@@ -513,6 +524,10 @@
     <div class="mn-disp" id="h-mon"></div>
     <button class="mn-btn" onclick="chM('h',1)">▶</button>
   </div>
+    <!-- ▼ 表示順切り替えボタン（新規追加） -->
+  <div class="sort-bar">
+    <button id="sort-btn" class="sort-btn desc" onclick="toggleHistSort()">↓ 新しい順</button>
+  </div>
   <div class="card" id="h-sum"></div>
   <div id="h-list"></div>
 </div>
@@ -642,11 +657,15 @@
 const EQ = ['車いす', 'ストレッチャー', 'リクライニング', '歩行', 'その他'];
 const KR = 'kt_rec_v3';
 const KT = 'kt_tpl_v3';
+const KS = 'kt_hist_sort'; // ▼ 追加
 
 let recs = [], tpls = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
 let curV = '1', curAL = 'ok', curDir = '→';
+
+// ▼ 追加：表示順
+let histSort = localStorage.getItem(KS) || 'desc';
 
 const $ = id => document.getElementById(id);
 const load = k => { try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e) { return []; } };
@@ -1015,6 +1034,7 @@ function init() {
   renderDayUserCards();
   initCal();
   restoreMorning();
+  updateSortBtn(); // ▼ 追加
       // ブラウザ自動復元対策：遅延で入庫距離を再チェック
       setTimeout(function() {
         var m = localStorage.getItem('kt_morning_v1');
@@ -1359,8 +1379,32 @@ function getMRecs(y,m) {
     .sort((a,b)=>a.date.localeCompare(b.date)||(a.t3||'').localeCompare(b.t3||''));
 }
 
+// ▼ 追加：ボタン更新
+function updateSortBtn() {
+  var btn = $('sort-btn');
+  if (!btn) return;
+  if (histSort === 'desc') {
+    btn.textContent = '↓ 新しい順';
+    btn.className = 'sort-btn desc';
+  } else {
+    btn.textContent = '↑ 古い順';
+    btn.className = 'sort-btn asc';
+  }
+}
+
+// ▼ 追加：切り替え処理
+function toggleHistSort() {
+  histSort = (histSort === 'desc') ? 'asc' : 'desc';
+  localStorage.setItem(KS, histSort);
+  updateSortBtn();
+  renderHist();
+}
+
 function renderHist() {
   const rs = getMRecs(hYM.y, hYM.m);
+  if (histSort === 'desc') rs.reverse();
+  updateSortBtn();
+
   const sum = $('h-sum'), list = $('h-list');
   if (!rs.length) {
     sum.innerHTML = `<div style="color:#94a3b8;font-size:13px;text-align:center;padding:6px;">この月の記録はありません</div>`;
