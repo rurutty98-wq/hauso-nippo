@@ -620,6 +620,14 @@
         <input type="text" id="t-to" class="inp" placeholder="到着地">
       </div>
     </div>
+    <div class="row" style="margin-top:8px;">
+      <label class="lbl">方向</label>
+      <div class="tog-g" id="t-dir-g">
+        <button type="button" class="tog s-bl" data-v="→" onclick="setTog('t-dir-g','s-bl',this)">→　片道</button>
+        <button type="button" class="tog" data-v="⇔" onclick="setTog('t-dir-g','s-bl',this)">⇔　往復</button>
+        <button type="button" class="tog" data-v="～" onclick="setTog('t-dir-g','s-bl',this)">～　その他</button>
+      </div>
+    </div>
     <div class="row">
       <label class="lbl">福祉用具</label>
       <div class="chips" id="t-eq-chips"></div>
@@ -662,7 +670,7 @@ const KS = 'kt_hist_sort'; // ▼ 追加
 let recs = [], tpls = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
-let curV = '1', curAL = 'ok', curDir = '→';
+let curV = '1', curAL = 'ok', curDir = '→', curTDir = '→';
 
 // ▼ 追加：表示順
 let histSort = localStorage.getItem(KS) || 'desc';
@@ -994,7 +1002,7 @@ function renderTplPicker() {
   if (!tpls.length) { card.style.display = 'none'; return; }
   card.style.display = 'block';
   list.innerHTML = tpls.map(function(t) {
-    var label = [t.from, t.to].filter(Boolean).join('→') || '（ルートなし）';
+    var label = [t.from, t.to].filter(Boolean).join(t.direction || '→') || '（ルートなし）';
     if (t.purpose) label += '  ' + t.purpose;
     return '<button class="tpl-chip" onclick="applyTemplate(\'' + t.id + '\')" id="tplchip-' + t.id + '">' + esc(label) + '</button>';
   }).join('');
@@ -1016,6 +1024,11 @@ function applyTemplate(id) {
   rEq.length = 0;
   normEq(t.equipment || []).forEach(function(e){ rEq.push(e); });
   renderChips('r-eq-chips', rEq, 'r-eq-other');
+  curDir = t.direction || '→';
+  document.querySelectorAll('#dir-g .tog').forEach(function(b){
+    b.classList.remove('s-bl');
+    if (b.dataset.v === curDir) b.classList.add('s-bl');
+  });
 }
 
 function init() {
@@ -1060,6 +1073,7 @@ function setTog(gid, cls, btn) {
   btn.classList.add(cls);
   if (gid==='al-g') curAL = btn.dataset.v;
   if (gid==='dir-g') curDir = btn.dataset.v;
+  if (gid==='t-dir-g') curTDir = btn.dataset.v;
 }
 
 // ── Vehicle ──
@@ -1306,7 +1320,7 @@ function renderTpls() {
     <div class="li">
       <div class="li-hd">
         <div>
-          <div class="li-name">📍 ${esc(t.from)} → ${esc(t.to)}</div>
+          <div class="li-name">📍 ${esc(t.from)} ${t.direction||'→'} ${esc(t.to)}</div>
           ${t.purpose ? `<div class="li-sub">${esc(t.purpose)}</div>` : ''}
         </div>
         ${(t.estimateLo||t.estimateHi) ? `<div style="font-weight:700;color:#059669;font-size:13px;">概算 ${fEst(t)}</div>` : ''}
@@ -1336,9 +1350,15 @@ function openTMod(id) {
     $('t-comp').value    = t.comp    || '';
     $('t-notes').value   = t.notes   || '';
     normEq(t.equipment||[]).forEach(e => tEq.push(e));
+    curTDir = t.direction || '→';
   } else {
     ['t-id','t-from','t-to','t-purpose','t-est-lo','t-est-hi','t-comp','t-notes'].forEach(id => $(id).value = '');
+    curTDir = '→';
   }
+  document.querySelectorAll('#t-dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === curTDir) b.classList.add('s-bl');
+  });
   renderChips('t-eq-chips', tEq, 't-eq-other');
   $('tmod').classList.add('open');
 }
@@ -1354,6 +1374,7 @@ function saveTpl() {
     id:        $('t-id').value || uid(),
     from:      $('t-from').value.trim(),
     to:        $('t-to').value.trim(),
+    direction: curTDir,
     equipment: eqArr,
     purpose:   $('t-purpose').value.trim(),
     estimateLo: parseInt($('t-est-lo').value, 10) || 0,
