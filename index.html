@@ -747,7 +747,7 @@ function renderCal() {
     var dayOfWeek = new Date(calYear, calMonth, day).getDay();
     var hasRec = recMap[dateStr] && recMap[dateStr].length > 0;
     var isToday = dateStr === todayStr;
-    cell.style.cssText = 'padding:4px 2px;border-radius:8px;cursor:' + (hasRec?'pointer':'default') + ';min-height:44px;display:flex;flex-direction:column;align-items:center;' + (isToday?'background:#dbeafe;':'') + (hasRec?'background:' + (isToday?'#bfdbfe':'#f0f9ff') + ';border:1px solid #93c5fd;':'');
+    cell.style.cssText = 'padding:4px 2px;border-radius:8px;cursor:pointer;min-height:44px;display:flex;flex-direction:column;align-items:center;' + (isToday?'background:#dbeafe;':'') + (hasRec?'background:' + (isToday?'#bfdbfe':'#f0f9ff') + ';border:1px solid #93c5fd;':'');
     var numEl = document.createElement('div');
     numEl.textContent = day;
     numEl.style.cssText = 'font-size:13px;font-weight:' + (isToday?'800':'500') + ';color:' + (dayOfWeek===0?'#ef4444':dayOfWeek===6?'#3b82f6':'#1e293b') + ';';
@@ -765,12 +765,22 @@ function renderCal() {
         cell.appendChild(nm);
       });
       (function(ds){ cell.onclick = function(){ showCalDetail(ds); }; })(dateStr);
+    } else {
+      (function(ds){ cell.onclick = function(){ showCalDetail(ds); }; })(dateStr);
     }
     grid.appendChild(cell);
   }
   // 詳細パネルを隠す
   document.getElementById('cal-detail').style.display = 'none';
 }
+function newRecFromCal(dateStr) {
+  clearF();
+  $('r-date').value = dateStr;
+  onDateChange();
+  showPage('main');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
 function showCalDetail(dateStr) {
   var recs = JSON.parse(localStorage.getItem('kt_rec_v3') || '[]');
   var dayRecs = recs.filter(function(r){ return r.date === dateStr; });
@@ -783,6 +793,18 @@ function showCalDetail(dateStr) {
   document.getElementById('cal-detail-title').textContent = parts[0]+'年'+parseInt(parts[1])+'月'+parseInt(parts[2])+'日 の記録';
   var list = document.getElementById('cal-detail-list');
   list.innerHTML = '';
+  // 新規入力ボタン
+  var newBtn = document.createElement('button');
+  newBtn.textContent = '＋ この日付で新規入力';
+  newBtn.style.cssText = 'width:100%;padding:10px;margin-bottom:10px;border:2px dashed #2563eb;border-radius:10px;background:#eff6ff;color:#2563eb;font-size:14px;font-weight:700;cursor:pointer;';
+  (function(ds){ newBtn.onclick = function(){ newRecFromCal(ds); }; })(dateStr);
+  list.appendChild(newBtn);
+  if (!dayRecs.length) {
+    var empty = document.createElement('div');
+    empty.textContent = 'この日の記録はありません';
+    empty.style.cssText = 'text-align:center;color:#94a3b8;font-size:13px;padding:12px 0;';
+    list.appendChild(empty);
+  }
   dayRecs.forEach(function(r) {
     var item = document.createElement('div');
     item.style.cssText = 'background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;';
