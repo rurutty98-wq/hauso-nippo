@@ -805,7 +805,7 @@ function newRecFromCal(dateStr) {
   clearF();
   $('r-date').value = dateStr;
   onDateChange();
-  showPage('main');
+  showPage('record');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
@@ -1607,7 +1607,7 @@ function dupRec(id) {
   rEq.length = 0;
   normEq(r.equipment || []).forEach(e => rEq.push(e));
   renderChips('r-eq-chips', rEq, 'r-eq-other');
-  showPage('main');
+  showPage('record');
   window.scrollTo({top: 0, behavior: 'smooth'});
   toast('📋 複製しました。内容を確認して保存してください');
 }
