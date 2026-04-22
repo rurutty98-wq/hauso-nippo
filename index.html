@@ -127,6 +127,10 @@
     .b-ye { background: #fef9c3; color: #713f12; }
     .b-or { background: #ffedd5; color: #9a3412; }
 
+    /* ── 地点マスター ── */
+    .place-chip { display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; border:1px solid #86efac; border-radius:20px; padding:4px 10px; font-size:13px; color:#166534; font-weight:600; }
+    .place-del { background:none; border:none; color:#16a34a; cursor:pointer; font-size:15px; padding:0 0 0 2px; line-height:1; }
+
     /* ── List ── */
     .li { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.07); cursor: pointer; }
     .li-hd { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -506,8 +510,22 @@
      ============================================================ -->
 <div id="page-template" class="page">
   <div class="page-title">📋 テンプレート</div>
+
+  <!-- 地点マスター -->
+  <div class="card" style="margin-bottom:14px;">
+    <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:6px;">📍 地点マスター</div>
+    <p style="color:#64748b;font-size:12px;margin-bottom:10px;line-height:1.6;">登録した地点は出発地・到着地の入力候補に表示されます。</p>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <input type="text" id="place-inp" class="inp" placeholder="地点名（例：〇〇病院）" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addPlace();}">
+      <button class="btn-sm btn-e" onclick="addPlace()" style="white-space:nowrap;padding:8px 14px;">追加</button>
+    </div>
+    <div id="place-list"></div>
+  </div>
+
+  <!-- ルートテンプレート -->
+  <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:8px;">🗺️ ルートテンプレート</div>
   <p style="color:#64748b; font-size:12px; margin-bottom:12px; line-height:1.7;">
-    ルート（出発地・到着地）・福祉用具・目的・概算金額を登録。<br>
+    出発地・到着地・福祉用具・目的・概算金額を登録。<br>
     記録入力で選ぶだけで自動入力されます。
   </p>
   <div id="tpl-list"></div>
@@ -1054,7 +1072,7 @@ function applyTemplate(id) {
 }
 
 function init() {
-  recs = load(KR); tpls = load(KT);
+  recs = load(KR); tpls = load(KT); places = load(KP);
   const now = new Date();
   hYM = { y: now.getFullYear(), m: now.getMonth()+1 };
   eYM = { y: now.getFullYear(), m: now.getMonth()+1 };
@@ -1063,6 +1081,7 @@ function init() {
   renderChips('r-eq-chips', rEq, 'r-eq-other');
   renderChips('t-eq-chips', tEq, 't-eq-other');
   refreshDataLists();
+  renderPlaces();
   renderTpls();
   renderHist();
   updMons();
@@ -1164,8 +1183,8 @@ function renderChips(cid, arr, otherId) {
 function refreshDrop() { refreshDataLists(); }  // 後方互換
 
 function refreshDataLists() {
-  const froms    = [...new Set(tpls.map(t=>t.from).filter(Boolean))];
-  const tos      = [...new Set(tpls.map(t=>t.to).filter(Boolean))];
+  const froms    = [...new Set([...places, ...tpls.map(t=>t.from).filter(Boolean)])];
+  const tos      = [...new Set([...places, ...tpls.map(t=>t.to).filter(Boolean)])];
   const comps    = [...new Set(tpls.map(t=>t.comp).filter(Boolean))];
   const purposes = [...new Set(tpls.map(t=>t.purpose).filter(Boolean))];
   const fill = (id, arr) => {
@@ -1329,6 +1348,44 @@ function clearF() {
     if (b.dataset.v === '→') b.classList.add('s-bl');
   });
   hideUserForm();
+}
+
+// ── 地点マスター ──
+const KP = 'kt_places';
+let places = [];
+
+function renderPlaces() {
+  const el = $('place-list');
+  if (!el) return;
+  if (!places.length) {
+    el.innerHTML = '<span style="font-size:12px;color:#94a3b8;">登録された地点がありません</span>';
+    return;
+  }
+  el.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+    places.map((p, i) =>
+      `<span class="place-chip">${esc(p)}<button class="place-del" onclick="delPlace(${i})">×</button></span>`
+    ).join('') + '</div>';
+}
+
+function addPlace() {
+  const inp = $('place-inp');
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  if (places.includes(name)) { toast('すでに登録済みです'); return; }
+  places.push(name);
+  sv(KP, places);
+  inp.value = '';
+  renderPlaces();
+  refreshDataLists();
+  toast('📍 ' + name + ' を追加しました');
+}
+
+function delPlace(i) {
+  if (!confirm('\u300c' + places[i] + '\u300d\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f')) return;
+  places.splice(i, 1);
+  sv(KP, places);
+  renderPlaces();
+  refreshDataLists();
 }
 
 // ── Templates ──
@@ -1588,6 +1645,7 @@ function doPrint() {
         date: new Date().toISOString(),
         records: load(KR),
         templates: load(KT),
+        places: load(KP),
         morning: localStorage.getItem('kt_morning_v1'),
         odo1: localStorage.getItem('kt_odo_1'),
         odo2: localStorage.getItem('kt_odo_2')
@@ -1618,11 +1676,12 @@ function doPrint() {
           }
           if (data.records) sv(KR, data.records);
           if (data.templates) sv(KT, data.templates);
+          if (data.places) sv(KP, data.places);
           if (data.morning) localStorage.setItem('kt_morning_v1', data.morning);
           if (data.odo1) localStorage.setItem('kt_odo_1', data.odo1);
           if (data.odo2) localStorage.setItem('kt_odo_2', data.odo2);
-          recs = load(KR); tpls = load(KT);
-          renderTpls(); renderHist(); renderDayUserCards(); refreshDataLists();
+          recs = load(KR); tpls = load(KT); places = load(KP);
+          renderPlaces(); renderTpls(); renderHist(); renderDayUserCards(); refreshDataLists();
           toast('\u{1F4E4} \u5FA9\u5143\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\uFF08' + (data.records||[]).length + '\u4EF6\u306E\u8A18\u9332\u3001' + (data.templates||[]).length + '\u4EF6\u306E\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8\uFF09');
         } catch(err) {
           alert('\u30D5\u30A1\u30A4\u30EB\u306E\u8AAD\u307F\u8FBC\u307F\u306B\u5931\u6557\u3057\u307E\u3057\u305F: ' + err.message);
