@@ -127,9 +127,15 @@
     .b-ye { background: #fef9c3; color: #713f12; }
     .b-or { background: #ffedd5; color: #9a3412; }
 
-    /* ── 地点マスター ── */
+    /* ── 地点マスター（登録管理用） ── */
     .place-chip { display:inline-flex; align-items:center; gap:4px; background:#f0fdf4; border:1px solid #86efac; border-radius:20px; padding:4px 10px; font-size:13px; color:#166534; font-weight:600; }
     .place-del { background:none; border:none; color:#16a34a; cursor:pointer; font-size:15px; padding:0 0 0 2px; line-height:1; }
+
+    /* ── 地点クイック選択チップ（入力フォーム用） ── */
+    .place-chips-row { display:flex; gap:6px; overflow-x:auto; padding:4px 0 6px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .place-chips-row::-webkit-scrollbar { display:none; }
+    .place-chip-sel { display:inline-flex; align-items:center; background:#eff6ff; border:1px solid #93c5fd; border-radius:20px; padding:6px 13px; font-size:13px; color:#1d4ed8; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0; border:none; }
+    .place-chip-sel:active { background:#dbeafe; }
 
     /* ── List ── */
     .li { background: white; border-radius: 12px; padding: 12px 14px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.07); cursor: pointer; }
@@ -437,12 +443,16 @@
       <div class="g2">
         <div class="row">
           <label class="lbl">📍 出発地</label>
-          <input type="text" id="r-from" class="inp" list="dl-from" placeholder="出発地を入力・選択" autocomplete="off" oninput="autoFill()">
+          <input type="text" id="r-from" class="inp" placeholder="出発地を入力" autocomplete="off" oninput="autoFill()" onfocus="setActiveLocField('r-from')">
         </div>
         <div class="row">
           <label class="lbl">🏁 到着地</label>
-          <input type="text" id="r-to" class="inp" list="dl-to" placeholder="到着地を入力・選択" autocomplete="off">
+          <input type="text" id="r-to" class="inp" placeholder="到着地を入力" autocomplete="off" onfocus="setActiveLocField('r-to')">
         </div>
+      </div>
+      <div id="place-chips-wrap" style="margin-top:6px; display:none;">
+        <div id="active-loc-label" style="font-size:11px;color:#64748b;margin-bottom:4px;">📍 出発地 に入力</div>
+        <div class="place-chips-row" id="place-chips-row"></div>
       </div>
       <div class="row" style="margin-top:8px;">
         <label class="lbl">方向</label>
@@ -688,7 +698,7 @@ const KS = 'kt_hist_sort'; // ▼ 追加
 let recs = [], tpls = [];
 let rEq = [], tEq = [];
 let hYM = {}, eYM = {};
-let curV = '1', curAL = 'ok', curDir = '→', curTDir = '→';
+let curV = '1', curAL = 'ok', curDir = '→', curTDir = '→', activeLocField = 'r-from';
 
 // ▼ 追加：表示順
 let histSort = localStorage.getItem(KS) || 'desc';
@@ -1183,18 +1193,27 @@ function renderChips(cid, arr, otherId) {
 function refreshDrop() { refreshDataLists(); }  // 後方互換
 
 function refreshDataLists() {
-  const froms    = [...new Set([...places, ...tpls.map(t=>t.from).filter(Boolean)])];
-  const tos      = [...new Set([...places, ...tpls.map(t=>t.to).filter(Boolean)])];
   const comps    = [...new Set(tpls.map(t=>t.comp).filter(Boolean))];
   const purposes = [...new Set(tpls.map(t=>t.purpose).filter(Boolean))];
   const fill = (id, arr) => {
     const dl=$(id); if(!dl) return; dl.innerHTML='';
     arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; dl.appendChild(o); });
   };
-  fill('dl-from',    froms);
-  fill('dl-to',      tos);
   fill('dl-comp',    comps);
   fill('dl-purpose', purposes);
+  // 地点クイック選択チップを描画
+  const wrap = $('place-chips-wrap');
+  const row  = $('place-chips-row');
+  if (wrap && row) {
+    if (places.length) {
+      row.innerHTML = places.map((p, i) =>
+        `<button class="place-chip-sel" onclick="pickPlace(${i})">${esc(p)}</button>`
+      ).join('');
+      wrap.style.display = 'block';
+    } else {
+      wrap.style.display = 'none';
+    }
+  }
 }
 
 // ── 出発地が入力されたら自動入力 ──
@@ -1386,6 +1405,19 @@ function delPlace(i) {
   sv(KP, places);
   renderPlaces();
   refreshDataLists();
+}
+
+function setActiveLocField(fid) {
+  activeLocField = fid;
+  const label = $('active-loc-label');
+  if (label) label.textContent = (fid === 'r-from' ? '📍 出発地' : '🏁 到着地') + ' に入力';
+}
+
+function pickPlace(i) {
+  const name = places[i];
+  if (!name || !$(activeLocField)) return;
+  $(activeLocField).value = name;
+  if (activeLocField === 'r-from') autoFill();
 }
 
 // ── Templates ──
