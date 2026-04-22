@@ -1490,10 +1490,37 @@ function renderHist() {
         ${r.notes?`<div class="dr"><span class="dk">備考</span><span class="dv">${esc(r.notes)}</span></div>`:''}
         <div style="margin-top:8px;display:flex;gap:8px;">
           <button class="btn-sm btn-e" onclick="event.stopPropagation();editRec('${r.id}')">✏️ 編集</button>
+          <button class="btn-sm" style="background:#f0fdf4;color:#16a34a;" onclick="event.stopPropagation();dupRec('${r.id}')">📋 複製</button>
           <button class="btn-sm btn-d" onclick="event.stopPropagation();delRec('${r.id}')">削除</button>
         </div>
       </div>
     </div>`).join('');
+}
+
+function dupRec(id) {
+  const r = recs.find(x => x.id === id);
+  if (!r) return;
+  clearF();
+  $('r-user').value    = r.user    || '';
+  $('r-from').value    = r.from    || '';
+  $('r-to').value      = r.to      || '';
+  $('r-purpose').value = r.purpose || '';
+  $('r-est-lo').value  = r.estimateLo ? String(r.estimateLo) : (r.estimate ? String(r.estimate) : '');
+  $('r-est-hi').value  = r.estimateHi ? String(r.estimateHi) : '';
+  $('r-comp').value    = r.comp    || '';
+  $('r-med').value     = r.medical || '';
+  $('r-notes').value   = r.notes   || '';
+  curDir = r.direction || '→';
+  document.querySelectorAll('#dir-g .tog').forEach(b => {
+    b.classList.remove('s-bl');
+    if (b.dataset.v === curDir) b.classList.add('s-bl');
+  });
+  rEq.length = 0;
+  normEq(r.equipment || []).forEach(e => rEq.push(e));
+  renderChips('r-eq-chips', rEq, 'r-eq-other');
+  showPage('main');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  toast('📋 複製しました。内容を確認して保存してください');
 }
 
 function delRec(id) {
